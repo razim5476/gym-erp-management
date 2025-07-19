@@ -56,6 +56,7 @@ class User(AbstractBaseUser):
         ('Member', 'Member')
     ]
     userr_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES)
+    is_trainer = models.BooleanField(default=False)
     height = models.CharField(max_length=256, null=True, blank=True)
     weight = models.CharField(max_length=256, null=True, blank=True)
     email = models.EmailField(max_length=256, unique=True)
@@ -78,6 +79,10 @@ class User(AbstractBaseUser):
 
     USERNAME_FIELD = "email"
     objects = CustomUserManager()
+
+    @property
+    def is_trainer(self):
+        return self.userr_type == "Trainer"
 
     def __str__(self):
         return f"{self.firstname} {self.lastname}"
@@ -151,6 +156,11 @@ class Attendance(CustomModel):
     """model for user and trainer attendnce."""
 
     attendance_id = models.CharField(max_length=256, unique=True)
+    ATTENDENCE_OPTIONS = [
+        ('Trainer', 'Trainer'),
+        ('Member', 'Member')
+    ]
+    attendence_for = models.CharField(max_length=50, choices=ATTENDENCE_OPTIONS)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
@@ -162,7 +172,7 @@ class Attendance(CustomModel):
         ('Present', 'Present'),
         ('Absent', 'Absent'),
     ]
-    status = models.CharField(max_length=50, choices=STATUS_CHOICE, default="Absent")
+    status = models.CharField(max_length=50, choices=STATUS_CHOICE, default="Present")
 
     class Meta:
         verbose_name = "Attendance"
@@ -171,6 +181,13 @@ class Attendance(CustomModel):
         indexes = [
             models.Index(fields=['user'])
         ]
+
+    @property
+    def duration(self):
+        """to check how much time a userr spend in the gym."""
+        if self.end_time and self.start_time:
+            return self.end_time - self.start_time
+        return None
 
     def __str__(self):
         return f"{self.user.firstname} {self.user.lastname} - {self.start_time}"
@@ -269,3 +286,35 @@ class Gallery(CustomModel):
 
     def __str__(self):
         return f"{self.user_profile.user.firstname} {self.user_profile.user.lastname}"
+
+
+# trner details:
+class Trainer(CustomModel):
+    """Trainer details"""
+
+    user = models.OneToOneField(
+        'user.User',
+        on_delete=models.PROTECT,
+        related_name="trainer_user",
+    )
+    experience = models.CharField(max_length=100)
+    level = models.IntegerField(default=1)
+    CATEGORY = [
+        ('PT', 'Personal Trainer'),
+        ('All', 'All Rounder'),
+        ('AT', 'Athletic Trainer'),
+    ]
+    category = models.CharField(max_length=20, choices=CATEGORY)
+    certifiation = models.FileField(upload_to="trainer_cerfificates/")
+    bio = models.TextField(null=True, blank=True)
+    joined_date = models.DateField(null=True, blank=True)
+    salary = models.DecimalField(max_digits=10, decimal_places=2)
+    on_leave = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = "Trainer"
+        verbose_name_plural = "Trainers"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.user.firstname} {self.user.lastname}"
