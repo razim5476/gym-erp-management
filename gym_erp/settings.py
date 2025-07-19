@@ -41,6 +41,10 @@ INSTALLED_APPS = [
     'user',
     'rest_framework',
     'drf_spectacular',
+    'organization',
+    "phonenumber_field",
+    'fitness',
+    'django_ckeditor_5',
 ]
 
 MIDDLEWARE = [
