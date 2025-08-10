@@ -47,6 +47,7 @@ class User(AbstractBaseUser):
     user_id = models.CharField(max_length=256, unique=True)
     firstname = models.CharField(max_length=256, null=True, blank=True)
     lastname = models.CharField(max_length=256)
+    password = models.CharField(max_length=15)
     age = models.PositiveIntegerField()
     joined_date = models.DateTimeField(default=timezone.now)
     image = models.ImageField(upload_to="", null=True, blank=True)

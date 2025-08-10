@@ -2,3 +2,5 @@ Django==5.2
 pillow==11.3.0
 django-phonenumber-field==8.1.0
 django-ckeditor-5==0.2.18
+djangorestframework_simplejwt==5.5.0
+argon2-cffi==25.1.0
