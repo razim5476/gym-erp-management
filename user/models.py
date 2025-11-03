@@ -2,6 +2,9 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
+
 # Create your models here.
 
 
@@ -76,6 +79,16 @@ class User(AbstractBaseUser):
         on_delete=models.PROTECT,
         related_name="user_role"
     )
+    company = models.ForeignKey(
+        'organization.Company',
+        on_delete=models.PROTECT,
+        related_name='company_user'
+    )
+    branch = models.ForeignKey(
+        'organization.Branch',
+        on_delete=models.PROTECT,
+        related_name='branch_user'
+    )
 
     USERNAME_FIELD = "email"
     objects = CustomUserManager()
@@ -137,9 +150,49 @@ class ActivityLog(CustomModel):
 
 
 class Address(CustomModel):
-    """model for strong loaction and addres of user."""
+    """model for storing loaction and addresses."""
 
-    address = models.TextField()
+
+    content_type = models.ForeignKey(
+        ContentType,
+        on_delete=models.PROTECT,
+        null=True, blank=True
+    )
+    object_id = models.PositiveBigIntegerField(null=True, blank=True)
+    content_object = GenericForeignKey(
+        'content_type', 'object_id'
+    )
+
+    name = models.CharField(
+        max_length=256, 
+        help_text='For naming the address like head office or home address.'
+    )
+    ADDRESS_TYPES = [
+        ('Head Office', 'Head Office'),
+        ('Billing', 'Billing'),
+        ('Shipping', 'Shipping'),
+        ('Home', 'Home'),
+    ]
+    address_type = models.CharField(max_length=50, choices=ADDRESS_TYPES, null=True, blank=True)
+
+    address_line_1 = models.CharField(max_length=256)
+    address_line_2 = models.CharField(max_length=256, null=True, blank=True)
+    address_line_3 = models.CharField(max_length=256, null=True, blank=True)
+    
+    city = models.CharField(max_length=256, null=True, blank=True)
+    pincode = models.CharField(max_length=20, null=True, blank=True)
+
+    country = models.ForeignKey(
+        'core.Country',
+        on_delete=models.PROTECT,
+        related_name='address_country',
+    )
+    state = models.ForeignKey(
+        'core.State',
+        on_delete=models.PROTECT,
+        related_name='address_state'
+    )
+
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
 
@@ -147,6 +200,9 @@ class Address(CustomModel):
         verbose_name = "Address"
         verbose_name_plural = "Addresses"
         ordering = ['-created_at']
+        indexes = [
+        models.Index(fields=['content_type', 'object_id']),
+        ]
 
     def __str__(self):
         return f"{self.latitude} - {self.longitude}"
@@ -244,8 +300,16 @@ class UserProfile(CustomModel):
     gallery = models.ForeignKey(
         'user.Gallery',
         on_delete=models.PROTECT,
-        related_name="user_profile_gallery"
+        related_name="user_profile_gallery",
+        null=True, blank=True
     )
+    LEVEL_CHOICES = [
+        (1, 'Beginner'),
+        (2, 'Intermediate'),
+        (3, 'Advanced'),
+    ]
+    level = models.IntegerField(choices=LEVEL_CHOICES, default=1)
+
     BLOOD_GROUP_CHOICES = [
         ('A+', 'A+'), ('A-', 'A-'),
         ('B+', 'B+'), ('B-', 'B-'),
@@ -318,3 +382,5 @@ class Trainer(CustomModel):
 
     def __str__(self):
         return f"{self.user.firstname} {self.user.lastname}"
+    
+    

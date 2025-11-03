@@ -42,3 +42,23 @@ class Country(CustomModel):
 
     def __str__(self):
         return self.name
+
+
+# currency:
+class Currency(CustomModel):
+    """
+    Currency.
+    """
+
+    currency_id = models.CharField(max_length=256, unique=True)
+    name = models.CharField(max_length=60, unique=True)
+    code = models.CharField(max_length=60, unique=True)
+
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Currency'
+        verbose_name_plural = 'Currencies'
+        ordering = ['-created_at']
+

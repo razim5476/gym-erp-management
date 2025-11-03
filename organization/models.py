@@ -5,29 +5,77 @@ from django.utils import timezone
 # Create your models here.
 
 
+# company
+class Company(CustomModel):
+    """
+    Company or Gym Main branch.
+    """
+
+    company_id = models.CharField(max_length=256, unique=True)
+    name = models.CharField(max_length=256)
+    short_name = models.CharField(max_length=50, null=True, blank=True)
+    webiste = models.URLField(max_length=256, null=True, blank=True)
+    build_date = models.DateTimeField(blank=True)
+
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Company'
+        verbose_name_plural = 'Companies'
+        ordering = ['-created_at']
+
+
+class CompanySettings(CustomModel):
+    """
+    Company configuration or settings.
+    """
+
+    company = models.OneToOneField(
+        'organization.Company',
+        on_delete=models.PROTECT,
+        related_name='company_settings_company'
+    )
+    address = models.ForeignKey(
+        'user.Address',
+        on_delete=models.PROTECT,
+        related_name='company_settings_address'
+    )
+
+    logo = models.URLField(null=True, blank=True)
+    language = models.CharField(max_length=256)
+
+    OWNER_STATUS = [
+        ('Single Owner', 'Single Owner'),
+        ('Multiple Owner', 'Multiple Owner'),
+    ]
+    owner_type = models.CharField(max_length=50, choices=OWNER_STATUS, null=True, blank=True)
+    gstin_number = models.CharField(max_length=15, null=True, blank=True)
+    currency = models.ForeignKey(
+        'core.Currency',
+        on_delete=models.PROTECT,
+        related_name='company_currency'
+    )
+
+    def __str__(self):
+        return self.company.name
+    
+    class Meta:
+        verbose_name = 'Company Settings'
+        verbose_name_plural = 'Company Settings'
+        ordering = ['-created_at']
+
+
+
 # branch
 class Branch(CustomModel):
     """Gym branches details."""
 
     branch_id = models.CharField(max_length=256, unique=True)
     name = models.CharField(max_length=256)
-    place = models.CharField(max_length=100)
-    city = models.CharField(max_length=50)
-    country = models.ForeignKey(
-        'core.Country',
-        on_delete=models.PROTECT,
-        related_name="branch_country"
-    )
-    state = models.ForeignKey(
-        'core.State',
-        on_delete=models.PROTECT,
-        related_name="branch_state"
-    )
-    location = models.CharField(max_length=50)
-    address_line = models.CharField(max_length=256)
-    address_line_2 = models.CharField(max_length=256, null=True, blank=True)
-    address_line_3 = models.CharField(max_length=256, null=True, blank=True)
-    pincode = models.IntegerField()
+    short_name = models.CharField(max_length=50, null=True, blank=True)
+    webiste = models.URLField(max_length=256, null=True, blank=True)
+    build_date = models.DateTimeField(blank=True, default=timezone.now)
 
     class Meta:
         verbose_name = "Branch"
@@ -47,10 +95,21 @@ class BranchSettings(CustomModel):
         on_delete=models.PROTECT,
         related_name="branch_settings"
     )
+    company = models.ForeignKey(
+        'organization.Company',
+        on_delete=models.PROTECT,
+        related_name='branch_settings_company'
+    )
+    address = models.ForeignKey(
+        'user.Address',
+        on_delete=models.PROTECT,
+        related_name='branch_settings_address'
+    )
     trainers = models.ManyToManyField(
         'user.Trainer',
         related_name="branch_trainers"
     )
+    
     is_unisex = models.BooleanField(default=True)
     GYM_TYPE_CHOICES = [
         ('AC', 'AC'),
@@ -66,29 +125,6 @@ class BranchSettings(CustomModel):
 
     def __str__(self):
         return f"Branch settings of {self.branch.name}"
-
-
-# gym
-class Gym(CustomModel):
-    """Gym details."""
-
-    gym_id = models.CharField(max_length=256, unique=True)
-    name = models.CharField(max_length=50, unique=True)
-    GYM_TYPE = [
-        ('Partnership', 'Partnership'),
-        ('Own', 'Own')
-    ]
-    type = models.CharField(max_length=50, choices=GYM_TYPE)
-    owner_name = models.CharField(max_length=256)
-    email = models.EmailField(unique=True)
-
-    class Meta:
-        verbose_name = "Gym"
-        verbose_name_plural = "Gyms"
-        ordering = ['-created_at']
-
-    def __str__(self):
-        return self.name
 
 
 # gym working time and days:
