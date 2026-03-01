@@ -2,6 +2,7 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from user.models import CustomModel
 from django.utils import timezone
+from django_ckeditor_5.fields import CKEditor5Field
 # Create your models here.
 
 
@@ -41,7 +42,8 @@ class CompanySettings(CustomModel):
         on_delete=models.PROTECT,
         related_name='company_settings_address'
     )
-
+    
+    financial_year = models.DateField()
     logo = models.URLField(null=True, blank=True)
     language = models.CharField(max_length=256)
 
@@ -162,3 +164,56 @@ class BranchWorkingTimeAndDays(CustomModel):
 
     def __str__(self):
         return f"{self.branch.name} - {self.working_days}"
+
+
+# warehouse:
+class Warehouse(CustomModel):
+    """
+    Warehouse.
+    """
+
+    warehouse_id = models.CharField(max_length=256, unique=True)
+    name = models.CharField(max_length=256, unique=True)
+    is_return_warehouse = models.BooleanField(default=False)
+
+    company = models.ForeignKey(
+        'organization.Company',
+        on_delete=models.PROTECT,
+        related_name='company_warehouse'
+    )
+    branch = models.ForeignKey(
+        'organization.Branch',
+        on_delete=models.PROTECT,
+        related_name='warehouse_branch'
+    )
+    address = models.ForeignKey(
+        'user.Address',
+        on_delete=models.PROTECT,
+        related_name='warehouse_address'
+    )
+    account = models.ForeignKey(
+        'accounts.Accounts',
+        on_delete=models.PROTECT,
+        related_name='warehouse_account'
+    )
+
+    description = CKEditor5Field('Description', config_name='extends')
+
+
+
+
+class CostCenter(CustomModel):
+    """
+    Docstring for CostCenter
+    """
+
+    pass
+
+
+class Project(CustomModel):
+    """
+    Docstring for Project
+    """
+
+    pass
+

@@ -1,6 +1,6 @@
 from django.db import models
 from user.models import CustomModel
-
+from django_ckeditor_5.fields import CKEditor5Field
 # Create your models here.
 
 
@@ -61,4 +61,80 @@ class Currency(CustomModel):
         verbose_name = 'Currency'
         verbose_name_plural = 'Currencies'
         ordering = ['-created_at']
+
+
+
+# uom
+class UnitOfMeasure(CustomModel):
+    """Unit of measure"""
+
+    uom_id = models.CharField(max_length=256, unique=True)
+    name = models.CharField(unique=True, max_length=20)
+    short_name = models.CharField(unique=True, max_length=5)
+
+    class Meta:
+        verbose_name = "Unit Of Measure"
+        verbose_name_plural = "Unit Of Measures"
+        ordering = ['-created_at']
+
+
+class Brand(CustomModel):
+    """
+    Brand.
+    """
+
+    brand_id = models.CharField(max_length=256, unique=True)
+    name = models.CharField(max_length=256, unique=True)
+    description = CKEditor5Field('Description', config_name='extends')
+    
+    company = models.ForeignKey(
+        'organization.Company',
+        on_delete=models.PROTECT,
+        related_name='brand_company'
+    )
+    branch = models.ForeignKey(
+        'organization.Branch',
+        on_delete=models.PROTECT,
+        related_name='brand_branch'
+    )
+
+    class Meta:
+        verbose_name = 'Brand'
+        verbose_name_plural = 'Brands'
+        ordering = ['-created_at']
+
+
+class Barcodes(CustomModel):
+    """
+    Barcode.
+    """
+
+    barcode_id = models.CharField(max_length=256, unique=True)
+    name = models.CharField(max_length=256, unique=True)
+    code = models.CharField(max_length=50, unique=True)
+    description = CKEditor5Field('Description', config_name='extends')
+
+    class Meta:
+        verbose_name = 'Barcode'
+        verbose_name_plural = 'Barcodes'
+        ordering = ['-created_at']
+
+
+
+class PaginationSize(CustomModel):
+    """
+    Docstring for Pgaination.Per page data limit or size.
+    """
+
+    pagination_id = models.CharField(max_length=256, unique=True)
+    data_per_page = models.PositiveBigIntegerField()
+
+    class Meta:
+        verbose_name = 'Pagination Size'
+        verbose_name_plural = 'Pagination Sizes'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.data_per_page
+    
 

@@ -1,9 +1,11 @@
+"""
+User models.
+"""
+
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.conf import settings
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
 
 # Create your models here.
 
@@ -13,12 +15,22 @@ class CustomModel(models.Model):
     """custom model includes created at updated at created by is active"""
 
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="created_%(class)s_objects")
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.PROTECT, 
+        related_name="created_%(class)s_objects")
     updated_at = models.DateTimeField(auto_now=True)
+    updated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.PROTECT, 
+        related_name="updated_%(class)s_objects",
+        null=True, blank=True)
     is_active = models.BooleanField(default=True)
 
     class Meta:
         abstract = True
+
+
 
 
 # custom user mnageer:
@@ -41,6 +53,8 @@ class CustomUserManager(BaseUserManager):
 
         extra_fields.setdefault('is_active', True)
         return self.create_user(email, password, **extra_fields)
+
+
 
 
 # user model:
@@ -74,9 +88,8 @@ class User(AbstractBaseUser):
         null=True,
         blank=True
     )
-    role = models.ForeignKey(
+    role = models.ManyToManyField(
         'user.Role',
-        on_delete=models.PROTECT,
         related_name="user_role"
     )
     company = models.ForeignKey(
@@ -95,6 +108,9 @@ class User(AbstractBaseUser):
 
     @property
     def is_trainer(self):
+        """
+        Return True if the user type is trainer.
+        """
         return self.userr_type == "Trainer"
 
     def __str__(self):
@@ -115,6 +131,8 @@ class LoginLog(CustomModel):
         indexes = [
             models.Index(fields=['user']),
         ]
+
+
 
 
 class ActivityLog(CustomModel):
@@ -149,20 +167,14 @@ class ActivityLog(CustomModel):
         return f"{self.user} - {self.action_type} on {self.module_name}"
 
 
+
+
 class Address(CustomModel):
     """model for storing loaction and addresses."""
 
 
-    content_type = models.ForeignKey(
-        ContentType,
-        on_delete=models.PROTECT,
-        null=True, blank=True
-    )
-    object_id = models.PositiveBigIntegerField(null=True, blank=True)
-    content_object = GenericForeignKey(
-        'content_type', 'object_id'
-    )
 
+    address_id = models.CharField(max_length=256, unique=True)
     name = models.CharField(
         max_length=256, 
         help_text='For naming the address like head office or home address.'
@@ -172,13 +184,14 @@ class Address(CustomModel):
         ('Billing', 'Billing'),
         ('Shipping', 'Shipping'),
         ('Home', 'Home'),
+        ('Warehouse', 'Warehouse')
     ]
     address_type = models.CharField(max_length=50, choices=ADDRESS_TYPES, null=True, blank=True)
 
     address_line_1 = models.CharField(max_length=256)
     address_line_2 = models.CharField(max_length=256, null=True, blank=True)
     address_line_3 = models.CharField(max_length=256, null=True, blank=True)
-    
+
     city = models.CharField(max_length=256, null=True, blank=True)
     pincode = models.CharField(max_length=20, null=True, blank=True)
 
@@ -200,12 +213,11 @@ class Address(CustomModel):
         verbose_name = "Address"
         verbose_name_plural = "Addresses"
         ordering = ['-created_at']
-        indexes = [
-        models.Index(fields=['content_type', 'object_id']),
-        ]
 
     def __str__(self):
         return f"{self.latitude} - {self.longitude}"
+
+
 
 
 class Attendance(CustomModel):
@@ -249,6 +261,8 @@ class Attendance(CustomModel):
         return f"{self.user.firstname} {self.user.lastname} - {self.start_time}"
 
 
+
+
 class Role(CustomModel):
     """model for creating roles like trainer, admin, customer etc for
     the users.
@@ -271,6 +285,8 @@ class Role(CustomModel):
         return f"{self.role_id} - {self.name}"
 
 
+
+
 class Permission(CustomModel):
     """model for the permission."""
 
@@ -286,6 +302,8 @@ class Permission(CustomModel):
 
     def __str__(self):
         return f"{self.permission_id} - {self.name}"
+
+
 
 
 class UserProfile(CustomModel):
@@ -330,6 +348,8 @@ class UserProfile(CustomModel):
         return f"{self.user.firstname} - {self.user.lastname}"
 
 
+
+
 class Gallery(CustomModel):
     """model for user gallery.multiple photos."""
 
@@ -350,6 +370,8 @@ class Gallery(CustomModel):
 
     def __str__(self):
         return f"{self.user_profile.user.firstname} {self.user_profile.user.lastname}"
+
+
 
 
 # trner details:

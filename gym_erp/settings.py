@@ -45,9 +45,15 @@ INSTALLED_APPS = [
     "phonenumber_field",
     'fitness',
     'django_ckeditor_5',
+    'accounts',
+    'sale',
+    'product',
+    'registrations',
+    'hr',
 ]
 
 MIDDLEWARE = [
+    'django_tenants.middleware.main.TenantMainMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -82,8 +88,12 @@ WSGI_APPLICATION = 'gym_erp.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django_tenants.postgresql_backend',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': '127.0.0.1',
+        'PORT': 5433
     }
 }
 
@@ -152,3 +162,20 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
+
+
+# for the django guardian.
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',   # default
+    'guardian.backends.ObjectPermissionBackend',   # required
+)
+
+
+ANONYMOUS_USER_NAME = None
+
+
+# django-tenants:
+DATABASE_ROUTERS = (
+    'django_tenants.routers.TenantSyncRouter',
+)
+
