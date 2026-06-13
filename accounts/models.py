@@ -34,17 +34,8 @@ class AccountGroups(CustomModel):
         ('Equity', 'Equity')
     ]
     root_type = models.CharField(max_length=10, choices=ACCOUNT_GROUP_TYPES, null=True, blank=True)
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='account_groups_company'
-    )
-    branch = models.ForeignKey(
-        'organization.Branch',
-        on_delete=models.PROTECT,
-        related_name='account_group_branch',
-        null=True, blank=True
-    )
+    company = models.PositiveBigIntegerField()
+    branch = models.PositiveBigIntegerField()
 
 
     def __str__(self):
@@ -86,18 +77,8 @@ class Accounts(CustomModel):
     ]
     sub_type = models.CharField(max_length=50, choices=ACCOUNT_SUB_TYPES)
 
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='accounts_company',
-        null=True, blank=True
-    )
-    branch = models.ForeignKey(
-        'organization.Branch',
-        on_delete=models.PROTECT,
-        related_name='account_branch',
-        null=True, blank=True
-    )
+    company = models.PositiveBigIntegerField()
+    branch = models.PositiveBigIntegerField()
 
     def __str__(self):
         return self.name
@@ -144,11 +125,7 @@ class BankBranch(CustomModel):
         )
     name = models.CharField(max_length=256)
     swift_code = models.CharField(max_length=20, unique=True)
-    address = models.ForeignKey(
-        'user.Address',
-        on_delete=models.PROTECT,
-        related_name='bank_branch_address'
-    )
+    address = models.PositiveBigIntegerField()
 
     def __str__(self):
         return f"{self.bank.name} - {self.name}"
@@ -188,16 +165,8 @@ class BankAccount(CustomModel):
     ]
     account_type = models.CharField(max_length=20, choices=ACCOUNT_TYPE)
 
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='bank_accounts'
-    )
-    branch = models.ForeignKey(
-        'organization.Branch',
-        on_delete=models.PROTECT,
-        null=True, blank=True
-    )
+    company = models.PositiveBigIntegerField()
+    branch = models.PositiveBigIntegerField()
 
     contact_name = models.CharField(max_length=50, null=True, blank=True)
     contact_no = models.CharField(max_length=50, null=True, blank=True)
@@ -233,17 +202,8 @@ class Tax(CustomModel):
 
     tax_id = models.CharField(max_length=256, unique=True)
     name = models.CharField(max_length=256, unique=True)
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='tax_company'
-    )
-    branch = models.ForeignKey(
-        'organization.Branch',
-        on_delete=models.PROTECT,
-        related_name='branch_tax',
-        null=True, blank=True
-    )
+    company = models.PositiveBigIntegerField()
+    branch = models.PositiveBigIntegerField()
 
     description = models.TextField(blank=True)
 
@@ -275,17 +235,8 @@ class TaxGroups(CustomModel):
         on_delete=models.PROTECT,
         related_name='tax_groups_tax'
     )
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='tax_group_company'
-    )
-    branch = models.ForeignKey(
-        'organization.Branch',
-        on_delete=models.PROTECT,
-        related_name='tax_branch',
-        null=True, blank=True
-    )
+    company = models.PositiveBigIntegerField()
+    branch = models.PositiveBigIntegerField()
 
     tax_rate = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField(blank=True)
@@ -318,11 +269,7 @@ class GeneralLedger(CustomModel):
         max_digits=15, decimal_places=2, default=0,
         help_text="Credit amount in account currency"
     )
-    account_currency = models.ForeignKey(
-        'core.Currency',
-        on_delete=models.PROTECT,
-        related_name='gl_entries_account'
-    )
+    account_currency = models.PositiveBigIntegerField()
 
     # trannsaction currency:
     debit_amount_tc = models.DecimalField(
@@ -333,11 +280,7 @@ class GeneralLedger(CustomModel):
         max_digits=15, decimal_places=2, default=0,
         help_text="Credit amount in transaction currency"
     )
-    transaction_currency = models.ForeignKey(
-        'core.Currency',
-        on_delete=models.PROTECT,
-        related_name='gl_entries_transaction'
-    )
+    transaction_currency = models.PositiveBigIntegerField()
 
     # company default currency:
     debit_amount = models.DecimalField(
@@ -365,18 +308,9 @@ class GeneralLedger(CustomModel):
     fiscal_year = models.CharField(max_length=10, null=True, blank=True)
     fiscal_period = models.CharField(max_length=10, null=True, blank=True)
 
-    customer = models.ForeignKey(
-        'registrations.Customer',
-        on_delete=models.PROTECT,
-        related_name='gl_customer',
-        null=True, blank=True
-    )
-    supplier = models.ForeignKey(
-        'registrations.Supplier',
-        on_delete=models.PROTECT,
-        related_name='gl_supplier',
-        null=True, blank=True
-    )
+    customer = models.PositiveBigIntegerField()
+    supplier = models.PositiveBigIntegerField()
+    
     account = models.ForeignKey(
         'accounts.Accounts',
         on_delete=models.PROTECT,
@@ -387,16 +321,9 @@ class GeneralLedger(CustomModel):
         on_delete=models.PROTECT,
         related_name='gl_against_account'
     )
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='gl_company'
-    )
-    branch = models.ForeignKey(
-        'organization.Branch',
-        on_delete=models.PROTECT,
-        related_name='gl_branch'
-    )
+    
+    company = models.PositiveBigIntegerField()
+    branch = models.PositiveBigIntegerField()
 
     PARTY_STATUS = [
         ('Customer', 'Customer'),
@@ -449,16 +376,8 @@ class Journal(CustomModel):
     ]
     entry_type = models.CharField(choices=ENTRY_TYPES, max_length=20)
 
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='journal_company'
-    )
-    branch = models.ForeignKey(
-        'organization.Branch',
-        on_delete=models.PROTECT,
-        related_name='journal_branch'
-    )
+    company = models.PositiveBigIntegerField()
+    branch = models.PositiveBigIntegerField()
 
     total_debit_amount = models.DecimalField(
         max_digits=15, 
@@ -534,13 +453,7 @@ class JournalDetails(CustomModel):
         on_delete=models.PROTECT,
         related_name='journal_details_account'
     )
-    account_currency = models.ForeignKey(
-        'core.Currency',
-        on_delete=models.PROTECT,
-        related_name='journal_details_currency',
-        null=True, blank=True,
-        help_text="Currency of the account being debited/credited"
-    )
+    account_currency = models.PositiveBigIntegerField()
 
     PARTY_TYPE = [
         ('Supplier', 'Supplier'),
@@ -550,24 +463,9 @@ class JournalDetails(CustomModel):
     party_type = models.CharField(choices=PARTY_TYPE, max_length=20, null=True, blank=True)
 
 
-    customer = models.ForeignKey(
-        'registrations.Customer',
-        on_delete=models.PROTECT,
-        related_name='journal_details_customer',
-        null=True, blank=True
-    )
-    supplier = models.ForeignKey(
-        'registrations.Supplier',
-        on_delete=models.PROTECT,
-        related_name='journal_details_supplier',
-        null=True, blank=True
-    )
-    employee = models.ForeignKey(
-        'hr.Employee',
-        on_delete=models.PROTECT,
-        related_name='journal_details_employee',
-        null=True, blank=True
-    )
+    customer = models.PositiveBigIntegerField()
+    supplier = models.PositiveBigIntegerField()
+    employee = models.PositiveBigIntegerField()
 
     debit_amount = models.DecimalField(max_digits=15, decimal_places=5, null=True, blank=True)
     credit_amount = models.DecimalField(max_digits=15, decimal_places=5, null=True, blank=True)
@@ -622,16 +520,8 @@ class OpeningInvoiceCreation(CustomModel):
     opening_invoice_id = models.CharField(max_length=256, unique=True)
     posting_date = models.DateTimeField()
 
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='opening_invoice_company'
-    )
-    branch = models.ForeignKey(
-        'organization.Branch',
-        on_delete=models.PROTECT,
-        related_name='opening_invoice_branch'
-    )
+    company = models.PositiveBigIntegerField()
+    branch = models.PositiveBigIntegerField()
     
     INVOICE_TYPE = [
         ('Sale', 'Sale'),
@@ -640,18 +530,8 @@ class OpeningInvoiceCreation(CustomModel):
     ]
     invoice_type = models.CharField(max_length=10, choices=INVOICE_TYPE)
 
-    cost_center = models.ForeignKey(
-        'organization.CostCenter',
-        on_delete=models.PROTECT,
-        related_name='opening_invoice_cost_center',
-        null=True, blank=True
-    )
-    project = models.ForeignKey(
-        'organization.Project',
-        on_delete=models.PROTECT,
-        related_name='opening_invoice_project',
-        null=True, blank=True
-    )
+    cost_center = models.PositiveBigIntegerField()
+    project = models.PositiveBigIntegerField()
 
     STATUS_CHOICES = [
         ('Draft', 'Draft'),
@@ -691,18 +571,8 @@ class OpeningInvoiceCreationItems(CustomModel):
         related_name='opening_invoice_items'
     )
 
-    customer = models.ForeignKey(
-        'registrations.Customer',
-        on_delete=models.PROTECT,
-        related_name='opening_invoice_customer',
-        null=True, blank=True
-    )
-    supplier = models.ForeignKey(
-        'registrations.Customer',
-        on_delete=models.PROTECT,
-        related_name='opening_invoice_supplier',
-        null=True, blank=True
-    )
+    customer = models.PositiveBigIntegerField()
+    supplier = models.PositiveBigIntegerField()
 
     invoice_number = models.CharField(
         max_length=256, 

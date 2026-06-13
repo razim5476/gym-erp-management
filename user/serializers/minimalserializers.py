@@ -37,7 +37,7 @@ class MinimalUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'user_id', 'firstname'
+            'user_id', 'first_name'
         ]
 
 

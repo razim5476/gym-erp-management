@@ -36,16 +36,8 @@ class WorkoutsPlan(CustomModel):
 
     difficulty = models.CharField(max_length=20, choices=DIFFICULTY_LEVELS, default='Beginner')
 
-    branch = models.ForeignKey(
-        'organization.Branch',
-        on_delete=models.PROTECT,
-        related_name='workout_plan_branch'
-    )
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='workout_plan_company'
-    )
+    branch = models.PositiveBigIntegerField()
+    company = models.PositiveBigIntegerField()
 
 
     class Meta:
@@ -76,16 +68,8 @@ class Workouts(CustomModel):
     reps = models.IntegerField(default=15)
     sets = models.IntegerField(default=3)
 
-    branch = models.ForeignKey(
-        'organization.Branch',
-        on_delete=models.PROTECT,
-        related_name='workouts_branch'
-    )
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='workouts_company'
-    )
+    branch = models.PositiveBigIntegerField()
+    company = models.PositiveBigIntegerField()
 
 
     class Meta:
@@ -103,16 +87,8 @@ class Playlist(CustomModel):
     platform = models.CharField(max_length=50, null=True, blank=True, help_text="Spofity, Youtube, etc.")
     decsription = CKEditor5Field('Playlist', config_name="extends")
 
-    branch = models.ForeignKey(
-        'organization.Branch',
-        on_delete=models.PROTECT,
-        related_name='playlist_branch'
-    )
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='playlist_company'
-    )
+    branch = models.PositiveBigIntegerField()
+    company = models.PositiveBigIntegerField()
 
 
     class Meta:
@@ -172,16 +148,8 @@ class Diet(CustomModel):
     duration = models.CharField(max_length=50, null=True, blank=True)
     calorie_range = models.IntegerField(null=True, blank=True)
 
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='diet_plan_company'
-    )
-    branch = models.ForeignKey(
-        'organization.Branch',
-        on_delete=models.PROTECT,
-        related_name='diet_branch'
-    )
+    company = models.PositiveBigIntegerField()
+    branch = models.PositiveBigIntegerField()
 
 
     class Meta:

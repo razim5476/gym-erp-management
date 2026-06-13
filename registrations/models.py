@@ -19,23 +19,9 @@ class CustomerGroup(CustomModel):
     group_name = models.CharField(max_length=256, unique=True)
     description = models.TextField(blank=True)
     
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='customer_group_company'
-    )
-    branch = models.ForeignKey(
-        'organization.Branch',
-        on_delete=models.PROTECT,
-        related_name='customer_group_branch',
-        null=True, blank=True
-    )
-    tax_group = models.ForeignKey(
-        'accounts.TaxGroups',
-        on_delete=models.PROTECT,
-        related_name='customer_group_tax_group',
-        null=True, blank=True
-    )
+    company = models.PositiveBigIntegerField()
+    branch = models.PositiveBigIntegerField()
+    tax_group = models.PositiveBigIntegerField(null=True, blank=True)
 
     class Meta:
         verbose_name = 'Customer Group'
@@ -53,23 +39,9 @@ class Customer(CustomModel):
     customer_name = models.CharField(max_length=256)
     phone_number = models.CharField(max_length=15, null=True, blank=True)
 
-    customer_group = models.ForeignKey(
-        'registrations.CustomerGroup',
-        on_delete=models.PROTECT,
-        related_name='group_of_the_customer',
-        null=True, blank=True
-    )
-    tax_group = models.ForeignKey(
-        'accounts.TaxGroups',
-        on_delete=models.PROTECT,
-        related_name='customer_tax_group',
-        null=True, blank=True
-    )
-    account = models.ForeignKey(
-        'accounts.Accounts',
-        on_delete=models.PROTECT,
-        related_name='customer_account'
-    )
+    customer_group = models.PositiveBigIntegerField()
+    tax_group = models.PositiveBigIntegerField(null=True, blank=True)
+    account = models.PositiveBigIntegerField()
     CUSTOMER_TYPES = [
         ('Company', 'Company'),
         ('Individual', 'Individual'),
@@ -79,17 +51,12 @@ class Customer(CustomModel):
 
     website = models.URLField(null=True, blank=True)
 
-    shipping_address = models.ForeignKey(
-        'user.Address',
-        on_delete=models.PROTECT,
-        related_name='customer_shipping_address',
-        null=True, blank=True
-    )
+    shipping_address = models.PositiveBigIntegerField()
 
     gstin = models.CharField(max_length=15, null=True, blank=True)
 
 
-class Suppliergroup(CustomModel):
+class SupplierGroup(CustomModel):
     """
     Docstring for Suppliergroup
     """

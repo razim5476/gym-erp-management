@@ -20,39 +20,12 @@ class PurchaseOrder(CustomModel):
     date = models.DateField()
     required_by = models.DateField(null=True, blank=True)
 
-    supplier = models.ForeignKey(
-        'regsitration.Supplier',
-        on_delete=models.PROTECT,
-        related_name='purchase_order_supplier'
-    )
-    cost_center = models.ForeignKey(
-        'registration.CostCenter',
-        on_delete=models.PROTECT,
-        related_name='purchase_order_cost_center',
-        null=True, blank=True
-    )
-    project = models.ForeignKey(
-        'regsitration.Project',
-        on_delete=models.PROTECT,
-        related_name='purchase_order_project',
-        null=True, blank=True
-    )
-    currency = models.ForeignKey(
-        'core.Currency',
-        on_delete=models.PROTECT,
-        related_name='purchase_order_currency'
-    )
-    warehouse = models.ForeignKey(
-        'organization.Warehouse',
-        on_delete=models.PROTECT,
-        related_name='purchase_order_warehouse'
-    )
-    tax_group = models.ForeignKey(
-        'accounts.TaxGroups',
-        on_delete=models.PROTECT,
-        related_name='purchase_order_tax_group',
-        null=True, blank=True
-    )
+    supplier = models.PositiveBigIntegerField()
+    cost_center = models.PositiveBigIntegerField()
+    project = models.PositiveBigIntegerField()
+    currency = models.PositiveBigIntegerField()
+    warehouse = models.PositiveBigIntegerField()
+    tax_group = models.PositiveBigIntegerField(null=True, blank=True)
 
     total_quantity = models.PositiveIntegerField(default=1)
     total_price_without_tax = models.DecimalField(max_digits=15, decimal_places=2)

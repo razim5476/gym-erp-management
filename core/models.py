@@ -87,21 +87,52 @@ class Brand(CustomModel):
     name = models.CharField(max_length=256, unique=True)
     description = CKEditor5Field('Description', config_name='extends')
     
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='brand_company'
-    )
-    branch = models.ForeignKey(
-        'organization.Branch',
-        on_delete=models.PROTECT,
-        related_name='brand_branch'
-    )
+    company = models.PositiveBigIntegerField()
+    branch = models.PositiveBigIntegerField()
 
     class Meta:
         verbose_name = 'Brand'
         verbose_name_plural = 'Brands'
         ordering = ['-created_at']
+
+
+
+class Category(CustomModel):
+    """
+    Category.
+    """
+
+    category_id = models.CharField(max_length=256, unique=True)
+    name = models.CharField(max_length=256, unique=True)
+    description = CKEditor5Field('Description', config_name='extends')
+    
+    company = models.PositiveBigIntegerField()
+    branch = models.PositiveBigIntegerField()
+
+    class Meta:
+        verbose_name = 'Category'
+        verbose_name_plural = 'Categories'
+        ordering = ['-created_at']
+
+
+class SubCategory(CustomModel):
+    """
+    SubCategory
+    """
+
+    sub_category_id = models.CharField(max_length=256, unique=True)
+    name = models.CharField(max_length=256, unique=True)
+    category = models.PositiveBigIntegerField(help_text='For storing category id foreign key refernce.')
+    description = CKEditor5Field('Description', config_name='extends')
+    
+    company = models.PositiveBigIntegerField()
+    branch = models.PositiveBigIntegerField()
+
+    class Meta:
+        verbose_name = 'Sub Category'
+        verbose_name_plural = 'Sub Categories'
+        ordering = ['-created_at']
+
 
 
 class Barcodes(CustomModel):
@@ -138,3 +169,44 @@ class PaginationSize(CustomModel):
         return self.data_per_page
     
 
+
+class UniqueId(CustomModel):
+    """
+    Unique id storing for each model.
+    """
+
+    prefix = models.CharField(max_length=20, unique=True)
+    unique_id = models.PositiveBigIntegerField()
+    model = models.CharField(max_length=20, unique=True)
+    branch = models.ForeignKey(
+        'organization.Branch',
+        on_delete=models.PROTECT,
+        related_name='unique_id_branch'
+    )
+
+    class Meta:
+        verbose_name = 'UniqueId'
+        verbose_name_plural = 'UniqueIds'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.prefix} - {self.model}"
+
+
+
+class FinancialYear(CustomModel):
+    """
+    Financial Year
+    """
+
+    financial_year_id = models.CharField(max_length=256, unique=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+
+    class Meta:
+        verbose_name = 'Financial Year'
+        verbose_name_plural = 'Financial Years'
+        ordering = ['-created_at']
+
+        

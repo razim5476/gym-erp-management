@@ -17,12 +17,7 @@ class ProductCategory(CustomModel):
 
     product_category_id = models.CharField(max_length=256, unique=True)
     name = models.CharField(max_length=50, unique=True)
-    tax_group = models.ForeignKey(
-        'accounts.TaxGroups',
-        on_delete=models.PROTECT,
-        related_name='tax_group_product_category',
-        null=True, blank=True
-    )
+    tax_group = models.PositiveBigIntegerField()
     parent = models.ForeignKey(
         'self',
         on_delete=models.PROTECT,
@@ -55,11 +50,7 @@ class Products(CustomModel):
         related_name='product_group',
         null=True, blank=True
     )
-    default_uom = models.ForeignKey(
-        'core.UnitOfMeasure',
-        on_delete=models.PROTECT,
-        related_name='default_uom'
-    )
+    default_uom = models.PositiveBigIntegerField()
 
     has_variants = models.BooleanField(default=False)
     maintain_stock = models.BooleanField(default=True)
@@ -78,57 +69,29 @@ class Products(CustomModel):
     valuation_method = models.CharField(max_length=50, choices=VALUATION_CHOICES)
 
     barcode = models.CharField(max_length=256, unique=True, null=True, blank=True)
-    barcode_type = models.ForeignKey(
-        'core.Barcodes',
-        on_delete=models.PROTECT,
-        related_name='product_barcode'
-    )
+    barcode_type = models.PositiveBigIntegerField()
     hsn_code = models.CharField(max_length=256)
 
     allow_sale = models.BooleanField(default=True)
     allow_purchase = models.BooleanField(default=True)
 
-    default_warehouse = models.ForeignKey(
-        'organization.Warehouse',
-        on_delete=models.PROTECT,
-        related_name='product_warehouse'
-    )
+    default_warehouse = models.PositiveBigIntegerField()
 
     image = models.URLField(null=True, blank=True)
     mrp = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     mop = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     selling_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
-    brand = models.ForeignKey(
-        'core.Brand',
-        on_delete=models.PROTECT,
-        related_name='product_brand',
-        null=True, blank=True
-    )
+    brand = models.PositiveBigIntegerField()
     variant = models.ForeignKey(
         'self',
         on_delete=models.PROTECT,
         related_name='product_variant',
         null=True, blank=True
     )
-    tax_group = models.ForeignKey(
-        'accounts.TaxGroups',
-        on_delete=models.PROTECT,
-        related_name='product_tax_group',
-        null=True, blank=True
-    )
-    default_sales_uom = models.ForeignKey(
-        'core.UnitOfMeasure',
-        on_delete=models.PROTECT,
-        related_name='default_sale_uom',
-        null=True, blank=True
-    )
-    default_purchase_uom = models.ForeignKey(
-        'core.UnitOfMeasure',
-        on_delete=models.PROTECT,
-        related_name='default_purchase_uom',
-        null=True, blank=True
-    )
+    tax_group = models.PositiveBigIntegerField()
+    default_sales_uom = models.PositiveBigIntegerField()
+    default_purchase_uom = models.PositiveBigIntegerField()
 
     is_warranty = models.BooleanField(default=False)
     warranty_period = models.PositiveIntegerField(null=True, blank=True)
@@ -294,19 +257,8 @@ class ProductVariantAttribute(CustomModel):
         related_name='product_variant_attributes',
         limit_choices_to={'is_variant': True}
     )
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='product_variant_attribute_company'
-    )
-    branch = models.ForeignKey(
-        'organization.Branch',
-        on_delete=models.PROTECT,
-        related_name='product_variant_attribute_branch'
-    )
+    company = models.PositiveBigIntegerField()
+    branch = models.PositiveBigIntegerField()
     
 
 
-
-
-    
