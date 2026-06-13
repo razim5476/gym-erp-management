@@ -1,0 +1,15 @@
+[MASTER]
+load-plugins=pylint_django
+
+[MESSAGES CONTROL]
+disable=
+    C0114,  ; missing-module-docstring
+    C0115,  ; missing-class-docstring
+    C0116,  ; missing-function-docstring
+    C0103,  ; invalid-name
+    R0903,  ; too-few-public-methods
+    W0613,  ; unused-argument
+    E1101   ; Django ORM false positives
+
+[FORMAT]
+max-line-length=120

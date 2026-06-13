@@ -1,9 +1,12 @@
+"""
+User models.
+"""
+
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.conf import settings
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
+import random
 
 # Create your models here.
 
@@ -13,47 +16,59 @@ class CustomModel(models.Model):
     """custom model includes created at updated at created by is active"""
 
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="created_%(class)s_objects")
+    created_by = models.PositiveBigIntegerField()
     updated_at = models.DateTimeField(auto_now=True)
+    updated_by = models.PositiveBigIntegerField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
 
     class Meta:
         abstract = True
 
 
+
+
 # custom user mnageer:
 class CustomUserManager(BaseUserManager):
     """Representing the custom base user manager."""
 
-    def create_user(self, email, passoword=None, **extra_fields):
+    def create_user(self, username, email, password=None, **extra_fields):
         """create the user"""
 
-        if not email:
-            raise ValueError("Email is required.")
+        if not username:
+            raise ValueError("Username is required.")
+        user_id = f"SUPEUSER{random.randint(1, 1000)}"
         email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(passoword)
+        user = self.model(username=username, email=email, user_id=user_id, **extra_fields)
+        user.set_password(password)
         user.save()
         return user
 
-    def create_superuser(self, email, password=None, **extra_fields):
+    def create_superuser(self, username, email, password=None, **extra_fields):
         """create a super user new."""
 
+        extra_fields.setdefault('userr_type', 'Admin')
         extra_fields.setdefault('is_active', True)
-        return self.create_user(email, password, **extra_fields)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_staff', True)
+        return self.create_user(username=username, email=email, password=password, **extra_fields)
+
+
 
 
 # user model:
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     """Representing the users.From the abstarct base user."""
 
     user_id = models.CharField(max_length=256, unique=True)
-    firstname = models.CharField(max_length=256, null=True, blank=True)
-    lastname = models.CharField(max_length=256)
-    age = models.PositiveIntegerField()
+    first_name = models.CharField(max_length=256, null=True, blank=True)
+    last_name = models.CharField(max_length=256)
+    username = models.CharField(max_length=150, unique=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+
     joined_date = models.DateTimeField(default=timezone.now)
-    image = models.ImageField(upload_to="", null=True, blank=True)
+    image = models.ImageField(upload_to="users/profile/", null=True, blank=True)
     USER_TYPE_CHOICES = [
+        ('Admin', 'Admin'),
         ('Branch Admin', 'Branch Admin'),
         ('Trainer', 'Trainer'),
         ('Member', 'Member')
@@ -63,7 +78,8 @@ class User(AbstractBaseUser):
     height = models.CharField(max_length=256, null=True, blank=True)
     weight = models.CharField(max_length=256, null=True, blank=True)
     email = models.EmailField(max_length=256, unique=True)
-    phone_number = models.CharField(max_length=15)
+
+    phone_number = models.CharField(max_length=15, unique=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -74,31 +90,24 @@ class User(AbstractBaseUser):
         null=True,
         blank=True
     )
-    role = models.ForeignKey(
+    role = models.ManyToManyField(
         'user.Role',
-        on_delete=models.PROTECT,
         related_name="user_role"
     )
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='company_user'
-    )
-    branch = models.ForeignKey(
-        'organization.Branch',
-        on_delete=models.PROTECT,
-        related_name='branch_user'
-    )
 
-    USERNAME_FIELD = "email"
+    company = models.PositiveBigIntegerField(null=True, blank=True)
+    branch = models.PositiveBigIntegerField(null=True, blank=True)
+
+    is_staff = models.BooleanField(default=False)
+
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ["phone_number", "first_name", "last_name", "email"]
     objects = CustomUserManager()
 
-    @property
-    def is_trainer(self):
-        return self.userr_type == "Trainer"
+
 
     def __str__(self):
-        return f"{self.firstname} {self.lastname}"
+        return f"{self.first_name} {self.last_name}"
 
 
 class LoginLog(CustomModel):
@@ -117,52 +126,13 @@ class LoginLog(CustomModel):
         ]
 
 
-class ActivityLog(CustomModel):
-    """activity log model for logging the actvity done by each user.like create, udate or delete
-    on model level.
-    """
-
-    activity_log_id = models.CharField(max_length=256, unique=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="activity_log_user")
-    module_name = models.CharField(max_length=50, null=True, blank=True)
-    description = models.CharField(max_length=100)
-    ACTION_CHOICES = [
-        ("CREATE", "Create"),
-        ("UPDATE", "Update"),
-        ("DELETE", "Delete"),
-        ("LOGIN", "Login"),
-        ("LOGOUT", "Logout"),
-    ]
-    action_type = models.CharField(max_length=50, null=True, blank=True, choices=ACTION_CHOICES)
-    ip_address = models.CharField(max_length=50, null=True, blank=True)
-    request_url = models.URLField(null=True, blank=True)
-
-    class Meta:
-        verbose_name = "Activity Log"
-        verbose_name_plural = "Activity Logs"
-        ordering = ['-created_at']
-        indexes = [
-            models.Index(fields=['user']),
-        ]
-
-    def __str__(self):
-        return f"{self.user} - {self.action_type} on {self.module_name}"
-
 
 class Address(CustomModel):
     """model for storing loaction and addresses."""
 
 
-    content_type = models.ForeignKey(
-        ContentType,
-        on_delete=models.PROTECT,
-        null=True, blank=True
-    )
-    object_id = models.PositiveBigIntegerField(null=True, blank=True)
-    content_object = GenericForeignKey(
-        'content_type', 'object_id'
-    )
 
+    address_id = models.CharField(max_length=256, unique=True)
     name = models.CharField(
         max_length=256, 
         help_text='For naming the address like head office or home address.'
@@ -172,40 +142,38 @@ class Address(CustomModel):
         ('Billing', 'Billing'),
         ('Shipping', 'Shipping'),
         ('Home', 'Home'),
+        ('Warehouse', 'Warehouse')
     ]
     address_type = models.CharField(max_length=50, choices=ADDRESS_TYPES, null=True, blank=True)
 
     address_line_1 = models.CharField(max_length=256)
     address_line_2 = models.CharField(max_length=256, null=True, blank=True)
     address_line_3 = models.CharField(max_length=256, null=True, blank=True)
-    
+
     city = models.CharField(max_length=256, null=True, blank=True)
     pincode = models.CharField(max_length=20, null=True, blank=True)
 
-    country = models.ForeignKey(
-        'core.Country',
-        on_delete=models.PROTECT,
-        related_name='address_country',
-    )
-    state = models.ForeignKey(
-        'core.State',
-        on_delete=models.PROTECT,
-        related_name='address_state'
-    )
+    country = models.PositiveBigIntegerField()
+    state = models.PositiveBigIntegerField()
 
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+
+    user = models.ForeignKey(
+        'user.User',
+        on_delete=models.CASCADE,
+        related_name='user_address'
+    )
 
     class Meta:
         verbose_name = "Address"
         verbose_name_plural = "Addresses"
         ordering = ['-created_at']
-        indexes = [
-        models.Index(fields=['content_type', 'object_id']),
-        ]
 
     def __str__(self):
         return f"{self.latitude} - {self.longitude}"
+
+
 
 
 class Attendance(CustomModel):
@@ -249,6 +217,8 @@ class Attendance(CustomModel):
         return f"{self.user.firstname} {self.user.lastname} - {self.start_time}"
 
 
+
+
 class Role(CustomModel):
     """model for creating roles like trainer, admin, customer etc for
     the users.
@@ -271,6 +241,8 @@ class Role(CustomModel):
         return f"{self.role_id} - {self.name}"
 
 
+
+
 class Permission(CustomModel):
     """model for the permission."""
 
@@ -286,6 +258,8 @@ class Permission(CustomModel):
 
     def __str__(self):
         return f"{self.permission_id} - {self.name}"
+
+
 
 
 class UserProfile(CustomModel):
@@ -330,6 +304,8 @@ class UserProfile(CustomModel):
         return f"{self.user.firstname} - {self.user.lastname}"
 
 
+
+
 class Gallery(CustomModel):
     """model for user gallery.multiple photos."""
 
@@ -350,6 +326,8 @@ class Gallery(CustomModel):
 
     def __str__(self):
         return f"{self.user_profile.user.firstname} {self.user_profile.user.lastname}"
+
+
 
 
 # trner details:
