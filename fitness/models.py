@@ -36,16 +36,8 @@ class WorkoutsPlan(CustomModel):
 
     difficulty = models.CharField(max_length=20, choices=DIFFICULTY_LEVELS, default='Beginner')
 
-    branch = models.ForeignKey(
-        'organization.Branch',
-        on_delete=models.PROTECT,
-        related_name='workout_plan_branch'
-    )
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='workout_plan_company'
-    )
+    branch = models.PositiveBigIntegerField()
+    company = models.PositiveBigIntegerField()
 
 
     class Meta:
@@ -76,16 +68,8 @@ class Workouts(CustomModel):
     reps = models.IntegerField(default=15)
     sets = models.IntegerField(default=3)
 
-    branch = models.ForeignKey(
-        'organization.Branch',
-        on_delete=models.PROTECT,
-        related_name='workouts_branch'
-    )
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='workouts_company'
-    )
+    branch = models.PositiveBigIntegerField()
+    company = models.PositiveBigIntegerField()
 
 
     class Meta:
@@ -103,16 +87,8 @@ class Playlist(CustomModel):
     platform = models.CharField(max_length=50, null=True, blank=True, help_text="Spofity, Youtube, etc.")
     decsription = CKEditor5Field('Playlist', config_name="extends")
 
-    branch = models.ForeignKey(
-        'organization.Branch',
-        on_delete=models.PROTECT,
-        related_name='playlist_branch'
-    )
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='playlist_company'
-    )
+    branch = models.PositiveBigIntegerField()
+    company = models.PositiveBigIntegerField()
 
 
     class Meta:
@@ -172,11 +148,8 @@ class Diet(CustomModel):
     duration = models.CharField(max_length=50, null=True, blank=True)
     calorie_range = models.IntegerField(null=True, blank=True)
 
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='diet_plan_company'
-    )
+    company = models.PositiveBigIntegerField()
+    branch = models.PositiveBigIntegerField()
 
 
     class Meta:
@@ -234,14 +207,9 @@ class Item(CustomModel):
         related_name="item_categorys"
     )
     uom = models.ForeignKey(
-        'fitness.UnitOfMeasure',
+        'core.UnitOfMeasure',
         on_delete=models.PROTECT,
         related_name="item_uom"
-    )
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='item_company'
     )
 
     description = models.TextField(blank=True, null=True)
@@ -262,12 +230,6 @@ class ItemCategory(CustomModel):
 
     item_category_id = models.CharField(max_length=256, unique=True)
     name = models.CharField(max_length=100, unique=True)
-    company = models.ForeignKey(
-        'organization.Company',
-        on_delete=models.PROTECT,
-        related_name='item_category_company'
-    )
-
 
     class Meta:
         verbose_name = "Item Category"
@@ -303,15 +265,4 @@ class ItemMacros(CustomModel):
         return self.item.name
 
 
-# uom
-class UnitOfMeasure(CustomModel):
-    """Unit of measure"""
 
-    uom_id = models.CharField(max_length=256, unique=True)
-    name = models.CharField(unique=True, max_length=20)
-    short_name = models.CharField(unique=True, max_length=5)
-
-    class Meta:
-        verbose_name = "Unit Of Measure"
-        verbose_name_plural = "Unit Of Measures"
-        ordering = ['-created_at']

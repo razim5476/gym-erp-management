@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+from datetime import timedelta
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,29 +27,48 @@ SECRET_KEY = 'django-insecure-$brc2gd1e3omlx)p4_1auw-$ega=pg^g!0%gh%)y45g)lgnk^(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
-
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
+SHARED_APPS = [
+    'django_tenants',
+    'tenant_manager',
     'django.contrib.contenttypes',
+    'django.contrib.auth',
+    'django.contrib.admin',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core',
-    'user',
     'rest_framework',
+    'rest_framework_simplejwt',
     'drf_spectacular',
+    'user',
+    'auditlog',
+]
+
+
+# tennats apps:
+TENANT_APPS = [
     'organization',
-    "phonenumber_field",
+    'accounts',
     'fitness',
-    'django_ckeditor_5',
+    'sale',
+    'product',
+    'registrations',
+    'hr',
+    'core',
+    'auditlog',
+    'crm'
+]
+
+INSTALLED_APPS = SHARED_APPS + [
+    app for app in TENANT_APPS if app not in SHARED_APPS
 ]
 
 MIDDLEWARE = [
+    'django_tenants.middleware.main.TenantMainMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -55,6 +76,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # django audo tlog:
+    'auditlog.middleware.AuditlogMiddleware'
 ]
 
 ROOT_URLCONF = 'gym_erp.urls'
@@ -77,13 +101,20 @@ TEMPLATES = [
 WSGI_APPLICATION = 'gym_erp.wsgi.application'
 
 
+AUTH_USER_MODEL = "user.User"
+
+
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django_tenants.postgresql_backend',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': '127.0.0.1',
+        'PORT': 5433
     }
 }
 
@@ -140,10 +171,21 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ]
 }
+
+
+
+# jwt config
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}
+
+
+
 
 # drf swagger drf spectacular:
 SPECTACULAR_SETTINGS = {
@@ -152,3 +194,106 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
+
+
+# for the django guardian.
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',   # default
+    'guardian.backends.ObjectPermissionBackend',   # required
+)
+
+
+ANONYMOUS_USER_NAME = None
+
+
+# django-tenants:
+DATABASE_ROUTERS = (
+    'django_tenants.routers.TenantSyncRouter',
+)
+
+
+TENANT_MODEL = "tenant_manager.Tenant"
+TENANT_DOMAIN_MODEL = "tenant_manager.Domain"
+SHOW_PUBLIC_IF_NO_TENANT_FOUND = True
+
+
+
+# email configs:
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+
+# audit log for all models:
+AUDITLOG_INCLUDE_ALL_MODELS=True
+
+
+AUDITLOG_EXCLUDE_TRACKING_MODELS = (
+    "admin.LogEntry",
+    "sessions.Session",
+    "tenant_manager.Tenant",
+    "tenant_manager.Domain"
+)
+
+
+AUDITLOG_MASK_FIELDS = [
+    "password",
+    "access",
+]
+
+
+
+# logger config:
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+
+    "formatters": {
+        "simple": {
+            "format": "[{levelname}] {name}: {message}",
+            "style": "{",
+        },
+        "verbose": {
+            "format": "{levelname} | {asctime} | {name} | {module}:{lineno} | {message}",
+            "style": "{",
+        },
+    },
+
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+
+        "file": {
+            "level": "ERROR",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(BASE_DIR, "logs/error.log"),
+            "formatter": "verbose",
+        },
+    },
+
+    "loggers": {
+        "django": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+            "propagate": True,
+        },
+
+        "django.request": {
+            "handlers": ["console", "file"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+
+        "": {  # root logger (your apps)
+            "handlers": ["console"],
+            "level": "DEBUG",
+        },
+    },
+}
+
+AUDITLOG_DISABLE_ON_RAW_SAVE = True

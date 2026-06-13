@@ -2,6 +2,7 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from user.models import CustomModel
 from django.utils import timezone
+from django_ckeditor_5.fields import CKEditor5Field
 # Create your models here.
 
 
@@ -36,12 +37,9 @@ class CompanySettings(CustomModel):
         on_delete=models.PROTECT,
         related_name='company_settings_company'
     )
-    address = models.ForeignKey(
-        'user.Address',
-        on_delete=models.PROTECT,
-        related_name='company_settings_address'
-    )
-
+    address = models.PositiveBigIntegerField()
+    
+    financial_year = models.PositiveBigIntegerField()
     logo = models.URLField(null=True, blank=True)
     language = models.CharField(max_length=256)
 
@@ -51,11 +49,7 @@ class CompanySettings(CustomModel):
     ]
     owner_type = models.CharField(max_length=50, choices=OWNER_STATUS, null=True, blank=True)
     gstin_number = models.CharField(max_length=15, null=True, blank=True)
-    currency = models.ForeignKey(
-        'core.Currency',
-        on_delete=models.PROTECT,
-        related_name='company_currency'
-    )
+    currency = models.PositiveBigIntegerField()
 
     def __str__(self):
         return self.company.name
@@ -100,15 +94,7 @@ class BranchSettings(CustomModel):
         on_delete=models.PROTECT,
         related_name='branch_settings_company'
     )
-    address = models.ForeignKey(
-        'user.Address',
-        on_delete=models.PROTECT,
-        related_name='branch_settings_address'
-    )
-    trainers = models.ManyToManyField(
-        'user.Trainer',
-        related_name="branch_trainers"
-    )
+    address = models.PositiveBigIntegerField()
     
     is_unisex = models.BooleanField(default=True)
     GYM_TYPE_CHOICES = [
@@ -125,6 +111,28 @@ class BranchSettings(CustomModel):
 
     def __str__(self):
         return f"Branch settings of {self.branch.name}"
+    
+
+
+class BranchTrainers(CustomModel):
+    """
+    Branch Trainers.
+    """
+
+    branch = models.ForeignKey(
+        'organization.Branch',
+        on_delete=models.PROTECT,
+        related_name='branch_trainers_branch'
+    )
+    trainer = models.PositiveBigIntegerField()
+
+
+    class Meta:
+        verbose_name = 'Branch Trainer'
+        verbose_name_plural = 'Branch Trainers'
+        ordering = ['-created_at']
+
+        
 
 
 # gym working time and days:
@@ -162,3 +170,48 @@ class BranchWorkingTimeAndDays(CustomModel):
 
     def __str__(self):
         return f"{self.branch.name} - {self.working_days}"
+
+
+# warehouse:
+class Warehouse(CustomModel):
+    """
+    Warehouse.
+    """
+
+    warehouse_id = models.CharField(max_length=256, unique=True)
+    name = models.CharField(max_length=256, unique=True)
+    is_return_warehouse = models.BooleanField(default=False)
+
+    company = models.ForeignKey(
+        'organization.Company',
+        on_delete=models.PROTECT,
+        related_name='company_warehouse'
+    )
+    branch = models.ForeignKey(
+        'organization.Branch',
+        on_delete=models.PROTECT,
+        related_name='warehouse_branch'
+    )
+    address = models.PositiveBigIntegerField()
+    account = models.PositiveBigIntegerField()
+
+    description = CKEditor5Field('Description', config_name='extends')
+
+
+
+
+class CostCenter(CustomModel):
+    """
+    Docstring for CostCenter
+    """
+
+    pass
+
+
+class Project(CustomModel):
+    """
+    Docstring for Project
+    """
+
+    pass
+
