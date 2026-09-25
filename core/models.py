@@ -87,8 +87,8 @@ class Brand(CustomModel):
     name = models.CharField(max_length=256, unique=True)
     description = CKEditor5Field('Description', config_name='extends')
     
-    company = models.PositiveBigIntegerField()
-    branch = models.PositiveBigIntegerField()
+    company = models.ForeignKey('organization.Company', on_delete=models.PROTECT, related_name='+')
+    branch = models.ForeignKey('organization.Branch', on_delete=models.PROTECT, related_name='+')
 
     class Meta:
         verbose_name = 'Brand'
@@ -106,8 +106,8 @@ class Category(CustomModel):
     name = models.CharField(max_length=256, unique=True)
     description = CKEditor5Field('Description', config_name='extends')
     
-    company = models.PositiveBigIntegerField()
-    branch = models.PositiveBigIntegerField()
+    company = models.ForeignKey('organization.Company', on_delete=models.PROTECT, related_name='+')
+    branch = models.ForeignKey('organization.Branch', on_delete=models.PROTECT, related_name='+')
 
     class Meta:
         verbose_name = 'Category'
@@ -122,11 +122,11 @@ class SubCategory(CustomModel):
 
     sub_category_id = models.CharField(max_length=256, unique=True)
     name = models.CharField(max_length=256, unique=True)
-    category = models.PositiveBigIntegerField(help_text='For storing category id foreign key refernce.')
+    category = models.ForeignKey('core.Category', on_delete=models.PROTECT, related_name='+')
     description = CKEditor5Field('Description', config_name='extends')
     
-    company = models.PositiveBigIntegerField()
-    branch = models.PositiveBigIntegerField()
+    company = models.ForeignKey('organization.Company', on_delete=models.PROTECT, related_name='+')
+    branch = models.ForeignKey('organization.Branch', on_delete=models.PROTECT, related_name='+')
 
     class Meta:
         verbose_name = 'Sub Category'
@@ -175,9 +175,9 @@ class UniqueId(CustomModel):
     Unique id storing for each model.
     """
 
-    prefix = models.CharField(max_length=20, unique=True)
-    unique_id = models.PositiveBigIntegerField()
-    model = models.CharField(max_length=20, unique=True)
+    prefix = models.CharField(max_length=20)
+    unique_id = models.PositiveBigIntegerField(default=1)
+    model = models.CharField(max_length=20)
     branch = models.ForeignKey(
         'organization.Branch',
         on_delete=models.PROTECT,
@@ -188,6 +188,12 @@ class UniqueId(CustomModel):
         verbose_name = 'UniqueId'
         verbose_name_plural = 'UniqueIds'
         ordering = ['-created_at']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['model', 'prefix', 'branch'],
+                name='unique_id_per_model_prefix_branch'
+            )
+        ]
 
     def __str__(self):
         return f"{self.prefix} - {self.model}"

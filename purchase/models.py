@@ -4,28 +4,27 @@ Purchase related models
 
 
 from django.db import models
-
 from user.models import CustomModel
 
 # Create your models here.
 
 
 
-class PurchaseOrder(CustomModel):
+class Purchase(CustomModel):
     """
     PurchaseOrder
     """
 
-    purchase_order_id = models.CharField(max_length=256, unique=True)
+    purchase_id = models.CharField(max_length=256, unique=True)
     date = models.DateField()
     required_by = models.DateField(null=True, blank=True)
 
-    supplier = models.PositiveBigIntegerField()
-    cost_center = models.PositiveBigIntegerField()
-    project = models.PositiveBigIntegerField()
-    currency = models.PositiveBigIntegerField()
-    warehouse = models.PositiveBigIntegerField()
-    tax_group = models.PositiveBigIntegerField(null=True, blank=True)
+    supplier = models.ForeignKey('registrations.Supplier', on_delete=models.PROTECT, related_name='+')
+    cost_center = models.ForeignKey('organization.CostCenter', on_delete=models.PROTECT, related_name='+')
+    project = models.ForeignKey('organization.Project', on_delete=models.PROTECT, related_name='+')
+    currency = models.ForeignKey('core.Currency', on_delete=models.PROTECT, related_name='+')
+    warehouse = models.ForeignKey('organization.Warehouse', on_delete=models.PROTECT, related_name='+')
+    tax_group = models.ForeignKey('accounts.TaxGroups', on_delete=models.PROTECT, null=True, blank=True, related_name='+')
 
     total_quantity = models.PositiveIntegerField(default=1)
     total_price_without_tax = models.DecimalField(max_digits=15, decimal_places=2)
@@ -55,16 +54,16 @@ class PurchaseOrder(CustomModel):
     payment_terms = models.ForeignKey(
         'core.PaymentTerms',
         on_delete=models.PROTECT,
-        related_name='purchase_order_payment_term'
+        related_name='purchase_payment_term'
     )
 
     class Meta:
-        verbose_name = 'Purchase Order'
-        verbose_name_plural = 'Purchase Orders'
+        verbose_name = 'Purchase'
+        verbose_name_plural = 'Purchase'
         ordering = ['-created_at']
 
     def __str__(self):
-        return self.purchase_order_id
+        return self.purchase_id
     
 
     

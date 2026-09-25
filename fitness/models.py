@@ -6,6 +6,26 @@ from core.formatchecker import ContentTypeRestrictedFileField
 # Create your models here.
 
 
+
+class TrainerCategory(CustomModel):
+    """
+    Trainer Category
+    """
+
+    trainer_category_id = models.CharField(max_length=128, unique=True)
+    name = models.CharField(max_length=256, unique=True)
+    description = models.TextField(null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Trainer Category'
+        verbose_name_plural = 'Trainer Categories'
+        ordering = ['-created_at']
+
+
+
 # worrkout
 class WorkoutsPlan(CustomModel):
     """Workouts"""
@@ -36,8 +56,8 @@ class WorkoutsPlan(CustomModel):
 
     difficulty = models.CharField(max_length=20, choices=DIFFICULTY_LEVELS, default='Beginner')
 
-    branch = models.PositiveBigIntegerField()
-    company = models.PositiveBigIntegerField()
+    branch = models.ForeignKey('organization.Branch', on_delete=models.PROTECT, related_name='+')
+    company = models.ForeignKey('organization.Company', on_delete=models.PROTECT, related_name='+')
 
 
     class Meta:
@@ -68,8 +88,8 @@ class Workouts(CustomModel):
     reps = models.IntegerField(default=15)
     sets = models.IntegerField(default=3)
 
-    branch = models.PositiveBigIntegerField()
-    company = models.PositiveBigIntegerField()
+    branch = models.ForeignKey('organization.Branch', on_delete=models.PROTECT, related_name='+')
+    company = models.ForeignKey('organization.Company', on_delete=models.PROTECT, related_name='+')
 
 
     class Meta:
@@ -87,8 +107,8 @@ class Playlist(CustomModel):
     platform = models.CharField(max_length=50, null=True, blank=True, help_text="Spofity, Youtube, etc.")
     decsription = CKEditor5Field('Playlist', config_name="extends")
 
-    branch = models.PositiveBigIntegerField()
-    company = models.PositiveBigIntegerField()
+    branch = models.ForeignKey('organization.Branch', on_delete=models.PROTECT, related_name='+')
+    company = models.ForeignKey('organization.Company', on_delete=models.PROTECT, related_name='+')
 
 
     class Meta:
@@ -148,8 +168,8 @@ class Diet(CustomModel):
     duration = models.CharField(max_length=50, null=True, blank=True)
     calorie_range = models.IntegerField(null=True, blank=True)
 
-    company = models.PositiveBigIntegerField()
-    branch = models.PositiveBigIntegerField()
+    company = models.ForeignKey('organization.Company', on_delete=models.PROTECT, related_name='+')
+    branch = models.ForeignKey('organization.Branch', on_delete=models.PROTECT, related_name='+')
 
 
     class Meta:
@@ -263,6 +283,45 @@ class ItemMacros(CustomModel):
 
     def __str__(self):
         return self.item.name
+
+
+
+class MembershipPlan(CustomModel):
+    """
+    Membership Plans
+    """
+
+    membershipl_plan_id = models.CharField(max_length=50)
+    name = models.CharField(max_length=256)
+    price = models.DecimalField(max_digits=15, decimal_places=3)
+
+    branch = models.ForeignKey('organization.Branch', on_delete=models.PROTECT, related_name='+')
+    company = models.ForeignKey('organization.Company', on_delete=models.PROTECT, related_name='+')
+
+    description = models.TextField(blank=True)
+    tax_group = models.ForeignKey('accounts.TaxGroups', on_delete=models.PROTECT, null=True, blank=True, related_name='+')
+    admission_fee = models.DecimalField(max_digits=15, decimal_places=2)
+
+    allow_freeze = models.BooleanField(default=False)
+    freeze_days = models.PositiveBigIntegerField(default=0)
+
+    PLAN_PERIODS = [
+        ('day', 'Day'),
+        ('week', 'Week'),
+        ('year', 'Year')
+    ]
+    plan_period = models.CharField(choices=PLAN_PERIODS)
+    plan_length = models.PositiveBigIntegerField()
+
+    max_sessions = models.PositiveIntegerField(
+        null=True, blank=True, help_text="For PT packages"
+    )
+
+    class Meta:
+        verbose_name = 'Membership Plan'
+        verbose_name_plural = 'Membership Plans'
+        ordering = ['-created_at']
+        unique_together = ('membershipl_plan_id', 'branch')
 
 
 

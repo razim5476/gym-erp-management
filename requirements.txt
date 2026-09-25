@@ -1,7 +1,13 @@
 Django>=5.2
 pillow>=11.3.0
+django-auditlog>=3.0.0
+django-cors-headers>=4.7.0
+django-guardian>=3.0.0
+django-tenants>=3.8.0
 django-phonenumber-field>=8.1.0
 django-ckeditor-5>=0.2.18
 drf-spectacular>=0.29.0
 phonenumbers>=9.0.17
 djangorestframework>=3.16.1
+djangorestframework-simplejwt>=5.5.0
+psycopg2-binary>=2.9.10

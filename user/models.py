@@ -16,9 +16,9 @@ class CustomModel(models.Model):
     """custom model includes created at updated at created by is active"""
 
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.PositiveBigIntegerField()
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='+')
     updated_at = models.DateTimeField(auto_now=True)
-    updated_by = models.PositiveBigIntegerField(null=True, blank=True)
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='+', null=True, blank=True)
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -46,7 +46,6 @@ class CustomUserManager(BaseUserManager):
     def create_superuser(self, username, email, password=None, **extra_fields):
         """create a super user new."""
 
-        extra_fields.setdefault('userr_type', 'Admin')
         extra_fields.setdefault('is_active', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_staff', True)
@@ -67,14 +66,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     joined_date = models.DateTimeField(default=timezone.now)
     image = models.ImageField(upload_to="users/profile/", null=True, blank=True)
-    USER_TYPE_CHOICES = [
-        ('Admin', 'Admin'),
-        ('Branch Admin', 'Branch Admin'),
-        ('Trainer', 'Trainer'),
-        ('Member', 'Member')
-    ]
-    userr_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES)
-    is_trainer = models.BooleanField(default=False)
+
     height = models.CharField(max_length=256, null=True, blank=True)
     weight = models.CharField(max_length=256, null=True, blank=True)
     email = models.EmailField(max_length=256, unique=True)
@@ -83,20 +75,24 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    address = models.OneToOneField(
-        'user.Address',
-        on_delete=models.PROTECT,
-        related_name="user_address",
-        null=True,
-        blank=True
-    )
+
     role = models.ManyToManyField(
         'user.Role',
         related_name="user_role"
     )
 
-    company = models.PositiveBigIntegerField(null=True, blank=True)
-    branch = models.PositiveBigIntegerField(null=True, blank=True)
+    company = models.ForeignKey(
+        'organization.Company', 
+        on_delete=models.PROTECT, 
+        related_name='+',
+        null=True, blank=True
+    )
+    branch = models.ForeignKey(
+        'organization.Branch', 
+        on_delete=models.PROTECT, 
+        related_name='+',
+        null=True, blank=True
+    )
 
     is_staff = models.BooleanField(default=False)
 
@@ -131,7 +127,6 @@ class Address(CustomModel):
     """model for storing loaction and addresses."""
 
 
-
     address_id = models.CharField(max_length=256, unique=True)
     name = models.CharField(
         max_length=256, 
@@ -153,8 +148,8 @@ class Address(CustomModel):
     city = models.CharField(max_length=256, null=True, blank=True)
     pincode = models.CharField(max_length=20, null=True, blank=True)
 
-    country = models.PositiveBigIntegerField()
-    state = models.PositiveBigIntegerField()
+    country = models.ForeignKey('core.Country', on_delete=models.PROTECT, related_name='+')
+    state = models.ForeignKey('core.State', on_delete=models.PROTECT, related_name='+')
 
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
@@ -180,11 +175,8 @@ class Attendance(CustomModel):
     """model for user and trainer attendnce."""
 
     attendance_id = models.CharField(max_length=256, unique=True)
-    ATTENDENCE_OPTIONS = [
-        ('Trainer', 'Trainer'),
-        ('Member', 'Member')
-    ]
-    attendence_for = models.CharField(max_length=50, choices=ATTENDENCE_OPTIONS)
+
+    attendence_for = models.CharField(max_length=50, help_text="Whose attendece like trainer, student, etc")
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
@@ -270,13 +262,7 @@ class UserProfile(CustomModel):
         on_delete=models.PROTECT,
         related_name="user_profile"
     )
-    bio = models.TextField()
-    gallery = models.ForeignKey(
-        'user.Gallery',
-        on_delete=models.PROTECT,
-        related_name="user_profile_gallery",
-        null=True, blank=True
-    )
+    bio = models.TextField(null=True, blank=True)
     LEVEL_CHOICES = [
         (1, 'Beginner'),
         (2, 'Intermediate'),
@@ -341,12 +327,8 @@ class Trainer(CustomModel):
     )
     experience = models.CharField(max_length=100)
     level = models.IntegerField(default=1)
-    CATEGORY = [
-        ('PT', 'Personal Trainer'),
-        ('All', 'All Rounder'),
-        ('AT', 'Athletic Trainer'),
-    ]
-    category = models.CharField(max_length=20, choices=CATEGORY)
+
+    category = models.ForeignKey('core.Category', on_delete=models.PROTECT, related_name='+')
     certifiation = models.FileField(upload_to="trainer_cerfificates/")
     bio = models.TextField(null=True, blank=True)
     joined_date = models.DateField(null=True, blank=True)

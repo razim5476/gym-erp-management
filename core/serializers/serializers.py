@@ -3,6 +3,8 @@ Core Serializers
 """
 
 
+import uuid
+
 from rest_framework import serializers
 
 from core.models import (
@@ -105,8 +107,20 @@ class BrandSerializer(serializers.ModelSerializer):
             'is_active', 'created_at', 'created_by', 'updated_at', 'updated_by'
         ]
         read_only_fields = [
-            'brand_id', 'is_active', 'created_at', 'updated_at'
+            'company', 'branch', 'created_at', 'created_by', 'updated_at',
+            'updated_by'
         ]
+        extra_kwargs = {
+            'brand_id': {'required': False}
+        }
+
+    def create(self, validated_data):
+        if not validated_data.get('brand_id'):
+            validated_data['brand_id'] = (
+                f"BRAND-{uuid.uuid4().hex[:10].upper()}"
+            )
+
+        return super().create(validated_data)
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -121,8 +135,20 @@ class CategorySerializer(serializers.ModelSerializer):
             'is_active', 'created_at', 'created_by', 'updated_at', 'updated_by'
         ]
         read_only_fields = [
-            'category_id', 'is_active', 'created_at', 'updated_at'
+            'company', 'branch', 'created_at', 'created_by', 'updated_at',
+            'updated_by'
         ]
+        extra_kwargs = {
+            'category_id': {'required': False}
+        }
+
+    def create(self, validated_data):
+        if not validated_data.get('category_id'):
+            validated_data['category_id'] = (
+                f"CAT-{uuid.uuid4().hex[:10].upper()}"
+            )
+
+        return super().create(validated_data)
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
@@ -138,8 +164,20 @@ class SubCategorySerializer(serializers.ModelSerializer):
             'updated_by'
         ]
         read_only_fields = [
-            'sub_category_id', 'is_active', 'created_at', 'updated_at'
+            'company', 'branch', 'created_at', 'created_by', 'updated_at',
+            'updated_by'
         ]
+        extra_kwargs = {
+            'sub_category_id': {'required': False}
+        }
+
+    def create(self, validated_data):
+        if not validated_data.get('sub_category_id'):
+            validated_data['sub_category_id'] = (
+                f"SUB-CAT-{uuid.uuid4().hex[:10].upper()}"
+            )
+
+        return super().create(validated_data)
 
 
 class BarcodesSerializer(serializers.ModelSerializer):
@@ -211,4 +249,3 @@ class FinancialYearSerializer(serializers.ModelSerializer):
         read_only_fields = [
             'financial_year_id', 'is_active', 'created_at', 'updated_at'
         ]
-

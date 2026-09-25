@@ -3665,3 +3665,642 @@ Traceback (most recent call last):
         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 AssertionError: Cannot apply DjangoModelPermissionsOrAnonReadOnly on a view that does not set `.queryset` or have a `.get_queryset()` method.
 ERROR | 2026-05-26 01:50:44,672 | django.server | basehttp:213 | "POST /authentication/login/ HTTP/1.1" 500 120419
+ERROR | 2026-06-16 07:13:52,566 | django.request | log:248 | Internal Server Error: /api/schema/
+Traceback (most recent call last):
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/drf_spectacular/views.py", line 84, in get
+    return self._get_schema_response(request)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/drf_spectacular/views.py", line 92, in _get_schema_response
+    data=generator.get_schema(request=request, public=self.serve_public),
+         ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/drf_spectacular/generators.py", line 287, in get_schema
+    paths=self.parse(request, public),
+          ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/drf_spectacular/generators.py", line 258, in parse
+    operation = view.schema.get_operation(
+        path, path_regex, path_prefix, method, self.registry
+    )
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/drf_spectacular/openapi.py", line 113, in get_operation
+    operation['responses'] = self._get_response_bodies()
+                             ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/drf_spectacular/openapi.py", line 1407, in _get_response_bodies
+    return {'200': self._get_response_for_code(response_serializers, '200', direction=direction)}
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/drf_spectacular/openapi.py", line 1463, in _get_response_for_code
+    component = self.resolve_serializer(serializer, direction)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/drf_spectacular/openapi.py", line 1658, in resolve_serializer
+    component.schema = self._map_serializer(serializer, direction, bypass_extensions)
+                       ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/drf_spectacular/openapi.py", line 959, in _map_serializer
+    schema = self._map_basic_serializer(serializer, direction)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/drf_spectacular/openapi.py", line 1052, in _map_basic_serializer
+    for field in serializer.fields.values():
+                 ^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ~~~~~~~~~^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/serializers.py", line 374, in fields
+    for key, value in self.get_fields().items():
+                      ~~~~~~~~~~~~~~~^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/serializers.py", line 1105, in get_fields
+    field_class, field_kwargs = self.build_field(
+                                ~~~~~~~~~~~~~~~~^
+        source, info, model, depth
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/serializers.py", line 1251, in build_field
+    return self.build_unknown_field(field_name, model_class)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/serializers.py", line 1369, in build_unknown_field
+    raise ImproperlyConfigured(
+    ...<2 lines>...
+    )
+django.core.exceptions.ImproperlyConfigured: Field name `plan` is not valid for model `MembershipPlan` in `fitness.serializers.minimalserializers.MinimalMembershipPlanSerializer`.
+ERROR | 2026-06-16 07:13:52,584 | django.server | basehttp:213 | "GET /api/schema/ HTTP/1.1" 500 197020
+ERROR | 2026-06-16 07:13:53,004 | django.request | log:248 | Internal Server Error: /api/schema/
+Traceback (most recent call last):
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/drf_spectacular/views.py", line 84, in get
+    return self._get_schema_response(request)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/drf_spectacular/views.py", line 92, in _get_schema_response
+    data=generator.get_schema(request=request, public=self.serve_public),
+         ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/drf_spectacular/generators.py", line 287, in get_schema
+    paths=self.parse(request, public),
+          ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/drf_spectacular/generators.py", line 258, in parse
+    operation = view.schema.get_operation(
+        path, path_regex, path_prefix, method, self.registry
+    )
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/drf_spectacular/openapi.py", line 113, in get_operation
+    operation['responses'] = self._get_response_bodies()
+                             ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/drf_spectacular/openapi.py", line 1407, in _get_response_bodies
+    return {'200': self._get_response_for_code(response_serializers, '200', direction=direction)}
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/drf_spectacular/openapi.py", line 1463, in _get_response_for_code
+    component = self.resolve_serializer(serializer, direction)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/drf_spectacular/openapi.py", line 1658, in resolve_serializer
+    component.schema = self._map_serializer(serializer, direction, bypass_extensions)
+                       ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/drf_spectacular/openapi.py", line 959, in _map_serializer
+    schema = self._map_basic_serializer(serializer, direction)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/drf_spectacular/openapi.py", line 1052, in _map_basic_serializer
+    for field in serializer.fields.values():
+                 ^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ~~~~~~~~~^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/serializers.py", line 374, in fields
+    for key, value in self.get_fields().items():
+                      ~~~~~~~~~~~~~~~^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/serializers.py", line 1105, in get_fields
+    field_class, field_kwargs = self.build_field(
+                                ~~~~~~~~~~~~~~~~^
+        source, info, model, depth
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/serializers.py", line 1251, in build_field
+    return self.build_unknown_field(field_name, model_class)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/serializers.py", line 1369, in build_unknown_field
+    raise ImproperlyConfigured(
+    ...<2 lines>...
+    )
+django.core.exceptions.ImproperlyConfigured: Field name `plan` is not valid for model `MembershipPlan` in `fitness.serializers.minimalserializers.MinimalMembershipPlanSerializer`.
+ERROR | 2026-06-16 07:13:53,010 | django.server | basehttp:213 | "GET /api/schema/ HTTP/1.1" 500 197020
+ERROR | 2026-06-16 07:42:18,218 | django.request | log:248 | Internal Server Error: /fitness/membership_dropdown/
+Traceback (most recent call last):
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 503, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 421, in initial
+    self.check_permissions(request)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 338, in check_permissions
+    if not permission.has_permission(request, self):
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/permissions.py", line 243, in has_permission
+    queryset = self._queryset(view)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/permissions.py", line 226, in _queryset
+    queryset = view.get_queryset()
+  File "/home/mrazim/Projects/DRF/gym-erp-management/fitness/views.py", line 32, in get_queryset
+    company=user.company_id,
+            ^^^^^^^^^^^^^^^
+AttributeError: 'AnonymousUser' object has no attribute 'company_id'
+ERROR | 2026-06-16 07:42:18,225 | django.server | basehttp:213 | "GET /fitness/membership_dropdown/ HTTP/1.1" 500 122514
+ERROR | 2026-06-19 01:22:17,181 | django.request | log:248 | Internal Server Error: /fitness/membership_dropdown/
+Traceback (most recent call last):
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 503, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 421, in initial
+    self.check_permissions(request)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 338, in check_permissions
+    if not permission.has_permission(request, self):
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/permissions.py", line 243, in has_permission
+    queryset = self._queryset(view)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/permissions.py", line 226, in _queryset
+    queryset = view.get_queryset()
+  File "/home/mrazim/Projects/DRF/gym-erp-management/fitness/views.py", line 32, in get_queryset
+    company=user.company_id,
+            ^^^^^^^^^^^^^^^
+AttributeError: 'AnonymousUser' object has no attribute 'company_id'
+ERROR | 2026-06-19 01:22:17,186 | django.server | basehttp:213 | "GET /fitness/membership_dropdown/ HTTP/1.1" 500 122514
+ERROR | 2026-06-21 07:58:55,819 | django.request | log:248 | Internal Server Error: /fitness/membership_dropdown/
+Traceback (most recent call last):
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 503, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 421, in initial
+    self.check_permissions(request)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 338, in check_permissions
+    if not permission.has_permission(request, self):
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/permissions.py", line 243, in has_permission
+    queryset = self._queryset(view)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/permissions.py", line 226, in _queryset
+    queryset = view.get_queryset()
+  File "/home/mrazim/Projects/DRF/gym-erp-management/fitness/views.py", line 32, in get_queryset
+    company=user.company_id,
+            ^^^^^^^^^^^^^^^
+AttributeError: 'AnonymousUser' object has no attribute 'company_id'
+ERROR | 2026-06-21 07:58:55,828 | django.server | basehttp:213 | "GET /fitness/membership_dropdown/ HTTP/1.1" 500 121814
+ERROR | 2026-06-21 07:58:58,331 | django.request | log:248 | Internal Server Error: /fitness/membership_dropdown/
+Traceback (most recent call last):
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 503, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 421, in initial
+    self.check_permissions(request)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 338, in check_permissions
+    if not permission.has_permission(request, self):
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/permissions.py", line 243, in has_permission
+    queryset = self._queryset(view)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/permissions.py", line 226, in _queryset
+    queryset = view.get_queryset()
+  File "/home/mrazim/Projects/DRF/gym-erp-management/fitness/views.py", line 32, in get_queryset
+    company=user.company_id,
+            ^^^^^^^^^^^^^^^
+AttributeError: 'AnonymousUser' object has no attribute 'company_id'
+ERROR | 2026-06-21 07:58:58,337 | django.server | basehttp:213 | "GET /fitness/membership_dropdown/ HTTP/1.1" 500 121814
+ERROR | 2026-09-20 15:11:26,148 | django.request | log:248 | Internal Server Error: /authentication/login/
+Traceback (most recent call last):
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.UndefinedTable: relation "user_user" does not exist
+LINE 1: ...er_user"."branch_id", "user_user"."is_staff" FROM "user_user...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/mrazim/Projects/DRF/gym-erp-management/authentication/views.py", line 24, in post
+    if serializer.is_valid():
+       ~~~~~~~~~~~~~~~~~~~^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/serializers.py", line 447, in run_validation
+    value = self.validate(value)
+  File "/home/mrazim/Projects/DRF/gym-erp-management/authentication/serializers/serializers.py", line 29, in validate
+    user_obj = User.objects.filter(email=email).first()
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1104, in first
+    for obj in queryset[:1]:
+               ~~~~~~~~^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/models/query.py", line 384, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1935, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/models/sql/compiler.py", line 1622, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: relation "user_user" does not exist
+LINE 1: ...er_user"."branch_id", "user_user"."is_staff" FROM "user_user...
+                                                             ^
+
+ERROR | 2026-09-20 15:11:26,155 | django.server | basehttp:213 | "POST /authentication/login/ HTTP/1.1" 500 187119
+ERROR | 2026-09-20 15:11:45,326 | django.request | log:248 | Internal Server Error: /authentication/login/
+Traceback (most recent call last):
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.UndefinedTable: relation "user_user" does not exist
+LINE 1: ...er_user"."branch_id", "user_user"."is_staff" FROM "user_user...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/mrazim/Projects/DRF/gym-erp-management/authentication/views.py", line 24, in post
+    if serializer.is_valid():
+       ~~~~~~~~~~~~~~~~~~~^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/serializers.py", line 447, in run_validation
+    value = self.validate(value)
+  File "/home/mrazim/Projects/DRF/gym-erp-management/authentication/serializers/serializers.py", line 29, in validate
+    user_obj = User.objects.filter(email=email).first()
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1104, in first
+    for obj in queryset[:1]:
+               ~~~~~~~~^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/models/query.py", line 384, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1935, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/models/sql/compiler.py", line 1622, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: relation "user_user" does not exist
+LINE 1: ...er_user"."branch_id", "user_user"."is_staff" FROM "user_user...
+                                                             ^
+
+ERROR | 2026-09-20 15:11:45,332 | django.server | basehttp:213 | "POST /authentication/login/ HTTP/1.1" 500 187137
+ERROR | 2026-09-20 15:20:07,563 | django.request | log:248 | Internal Server Error: /authentication/login/
+Traceback (most recent call last):
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.UndefinedTable: relation "user_user" does not exist
+LINE 1: ...er_user"."branch_id", "user_user"."is_staff" FROM "user_user...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/mrazim/Projects/DRF/gym-erp-management/authentication/views.py", line 24, in post
+    if serializer.is_valid():
+       ~~~~~~~~~~~~~~~~~~~^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/serializers.py", line 447, in run_validation
+    value = self.validate(value)
+  File "/home/mrazim/Projects/DRF/gym-erp-management/authentication/serializers/serializers.py", line 29, in validate
+    user_obj = User.objects.filter(email=email).first()
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1104, in first
+    for obj in queryset[:1]:
+               ~~~~~~~~^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/models/query.py", line 384, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1935, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/models/sql/compiler.py", line 1622, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: relation "user_user" does not exist
+LINE 1: ...er_user"."branch_id", "user_user"."is_staff" FROM "user_user...
+                                                             ^
+
+ERROR | 2026-09-20 15:20:07,577 | django.server | basehttp:213 | "POST /authentication/login/ HTTP/1.1" 500 187162
+ERROR | 2026-09-20 15:22:57,916 | django.request | log:248 | Internal Server Error: /authentication/login/
+Traceback (most recent call last):
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.UndefinedTable: relation "user_user" does not exist
+LINE 1: ...er_user"."branch_id", "user_user"."is_staff" FROM "user_user...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/mrazim/Projects/DRF/gym-erp-management/authentication/views.py", line 24, in post
+    if serializer.is_valid():
+       ~~~~~~~~~~~~~~~~~~~^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/serializers.py", line 447, in run_validation
+    value = self.validate(value)
+  File "/home/mrazim/Projects/DRF/gym-erp-management/authentication/serializers/serializers.py", line 29, in validate
+    user_obj = User.objects.filter(email=email).first()
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1104, in first
+    for obj in queryset[:1]:
+               ~~~~~~~~^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/models/query.py", line 384, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1935, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/models/sql/compiler.py", line 1622, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: relation "user_user" does not exist
+LINE 1: ...er_user"."branch_id", "user_user"."is_staff" FROM "user_user...
+                                                             ^
+
+ERROR | 2026-09-20 15:22:57,925 | django.server | basehttp:213 | "POST /authentication/login/ HTTP/1.1" 500 187249
+ERROR | 2026-09-20 15:38:56,841 | django.request | log:248 | Internal Server Error: /authentication/login/
+Traceback (most recent call last):
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/home/mrazim/Projects/DRF/env/lib64/python3.13/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/mrazim/Projects/DRF/gym-erp-management/authentication/views.py", line 44, in post
+    "user_type": user.userr_type,
+                 ^^^^^^^^^^^^^^^
+AttributeError: 'User' object has no attribute 'userr_type'
+ERROR | 2026-09-20 15:38:56,846 | django.server | basehttp:213 | "POST /authentication/login/ HTTP/1.1" 500 108656

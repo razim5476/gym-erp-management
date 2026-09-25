@@ -5,7 +5,7 @@ Docstring for accounts.serializers.serializers
 
 from rest_framework import serializers
 
-from accounts.models import AccountGroups, Accounts, Bank, BankBranch, BankAccount, Tax, TaxGroups
+from accounts.models import AccountGroups, Accounts, Bank, BankBranch, BankAccount, PaymentMethod, Tax, TaxGroups
 from accounts.serializers.minimal_serializers import MinimalAccountGroupSerialzier, MinimalAccountSerializer, MinimalBankSerializer, MinimalTaxSerializer
 from core.models import Currency
 from core.serializers.minimal_serializers import MinimalCurrencySerializer
@@ -232,5 +232,30 @@ class TaxGroupSerializer(serializers.ModelSerializer):
         read_only_fields = [
             'is_active', 'created_at', 'updated_at'
         ]
+
+
+
+
+class PaymentMethodSerializer(serializers.ModelSerializer):
+    """
+    Payment Method Serializer.
+    """
+
+    account = MinimalAccountSerializer()
+    created_by = MinimalUserSerializer(read_only=True)
+    updated_by = MinimalUserSerializer(read_only=True)
+    branch = MinimalBranchSerializer(read_only=True)
+    company = MinimalCompanySerializer(read_only=True)
+
+    class Meta:
+        model = PaymentMethod
+        fields = [
+            'payment_method_id', 'name', 'account', 'description', 'is_default',
+            'company', 'branch', 'created_by', 'updated_by', 'created_at', 'updated_at',
+            'is_active'
+        ]
+
+
+
 
 

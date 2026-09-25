@@ -4,7 +4,7 @@ Docstring for accounts.serializers.minimal_serializers
 
 
 from rest_framework import serializers
-from accounts.models import AccountGroups, Accounts, Bank, Tax
+from accounts.models import AccountGroups, Accounts, Bank, PaymentMethod, Tax
 
 
 
@@ -59,4 +59,17 @@ class MinimalTaxSerializer(serializers.ModelSerializer):
         ]
 
         
+
+
+class MinimalPaymentMethodSerializer(serializers.ModelSerializer):
+    """
+    MinimalPaymentMethodSerializer
+    """
+
+    class Meta:
+        model = PaymentMethod
+        fields = [
+            'id', 'payment_method_id', 'name', 'account'
+        ]
+
 

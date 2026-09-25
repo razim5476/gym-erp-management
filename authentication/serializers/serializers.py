@@ -3,11 +3,8 @@ Docstring for authentication.serializers.serializers
 """
 
 
-from rest_framework import serializers
 from django.contrib.auth import authenticate, get_user_model
-from core.utils import generate_unique_id
-from organization.models import Branch, Company
-from user.models import Address, Role
+from rest_framework import serializers
 
 
 
@@ -21,18 +18,27 @@ class LoginSerializer(serializers.Serializer):
     Login Serializer.
     """
 
-    email = serializers.EmailField()
-    password = serializers.CharField()
+    username = serializers.CharField(required=False, allow_blank=True)
+    email = serializers.EmailField(required=False, allow_blank=True)
+    password = serializers.CharField(write_only=True)
 
     def validate(self, attrs):
-        
-        email = attrs.get('email')
+        username = attrs.get('username') or attrs.get('email')
         password = attrs.get('password')
 
-        user = authenticate(username=email, password=password)
+        if not username:
+            raise serializers.ValidationError("Username or email is required.")
+
+        user_obj = User.objects.filter(email=username).first()
+        username = user_obj.username if user_obj else username
+        request = self.context.get('request')
+        user = authenticate(request=request, username=username, password=password)
 
         if not user:
-            raise serializers.ValidationError("Invalid credentials")
+            raise serializers.ValidationError("Invalid credentials.")
+
+        if not user.is_active:
+            raise serializers.ValidationError("User account is inactive.")
         
 
         attrs['user'] = user
