@@ -35,21 +35,22 @@ SHARED_APPS = [
     'django_tenants',
     'tenant_manager',
     'django.contrib.contenttypes',
-    'django.contrib.auth',
-    'django.contrib.admin',
-    'django.contrib.sessions',
-    'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_spectacular',
-    'user',
-    'auditlog',
 ]
 
 
 # tennats apps:
 TENANT_APPS = [
+    'django.contrib.contenttypes',
+    'django.contrib.auth',
+    'django.contrib.admin',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'rest_framework_simplejwt.token_blacklist',
+    'user',
     'organization',
     'accounts',
     'fitness',
@@ -59,7 +60,8 @@ TENANT_APPS = [
     'hr',
     'core',
     'auditlog',
-    'crm'
+    'crm',
+    'authentication'
 ]
 
 INSTALLED_APPS = SHARED_APPS + [
@@ -172,7 +174,8 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ]
+    ],
+    'EXCEPTION_HANDLER': 'core.responses.custom_exception_handler',
 }
 
 
@@ -297,3 +300,13 @@ LOGGING = {
 }
 
 AUDITLOG_DISABLE_ON_RAW_SAVE = True
+
+
+
+## smtp config:
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'velocityvc2026@gmail.com'
+EMAIL_HOST_PASSWORD = 'kxkewoicmopqnhvt'   # use Gmail App Password, not your real password
+DEFAULT_FROM_EMAIL = 'VC'

@@ -173,6 +173,20 @@ class PaginationSizePermissions:
     IMPORT_PAGINATION_SIZE = "core.importpaginationsize"
 
 
+class ProductCategoryPermissions:
+    """
+    ProductCategoryPermissions
+    """
+
+    CREATE_PRODUCT_CATEGORY = "product.create_productcategory"
+    EDIT_PRODUCT_CATEGORY = "product.edit_productcategory"
+    VIEW_PRODUCT_CATEGORY = "product.view_productcategory"
+    DISABLE_PRODUCT_CATEGORY = "product.disable_productcategory"
+    DELETE_PRODUCT_CATEGORY = "product.delete_productcategory"
+    EXPORT_PRODUCT_CATEGORY = "product.exportproductcategory"
+    IMPORT_PRODUCT_CATEGORY = "product.importproductcategory"
+
+
 class UniqueIdPermissions:
     """
     UniqueIdPermissions
@@ -200,3 +214,60 @@ class FinancialYearPermissions:
     EXPORT_FINANCIAL_YEAR = "core.exportfinancialyear"
     IMPORT_FINANCIAL_YEAR = "core.importfinancialyear"
 
+
+class PaymentMethodPermissions:
+    """
+    PaymentMethodPermissions
+    """
+
+    CREATE_PAYMENT_METHOD = "accounts.create_paymentmethod"
+    EDIT_PAYMENT_METHOD = "accounts.edit_paymentmethod"
+    VIEW_PAYMENT_METHOD = "accounts.view_paymentmethod"
+    DISABLE_PAYMENT_METHOD = "accounts.disable_paymentmethod"
+    DELETE_PAYMENT_METHOD = "accounts.delete_paymentmethod"
+    EXPORT_PAYMENT_METHOD = "accounts.exportpaymentmethod"
+    IMPORT_PAYMENT_METHOD = "accounts.importpaymentmethod"
+
+
+class CustomerGroupPermissions:
+    """CustomerGroupPermissions"""
+    CREATE_CUSTOMER_GROUP = "registrations.create_customergroup"
+    EDIT_CUSTOMER_GROUP = "registrations.edit_customergroup"
+    VIEW_CUSTOMER_GROUP = "registrations.view_customergroup"
+    DISABLE_CUSTOMER_GROUP = "registrations.disable_customergroup"
+    DELETE_CUSTOMER_GROUP = "registrations.delete_customergroup"
+    EXPORT_CUSTOMER_GROUP = "registrations.exportcustomergroup"
+    IMPORT_CUSTOMER_GROUP = "registrations.importcustomergroup"
+
+
+class CustomerPermissions:
+    """CustomerPermissions"""
+    CREATE_CUSTOMER = "registrations.create_customer"
+    EDIT_CUSTOMER = "registrations.edit_customer"
+    VIEW_CUSTOMER = "registrations.view_customer"
+    DISABLE_CUSTOMER = "registrations.disable_customer"
+    DELETE_CUSTOMER = "registrations.delete_customer"
+    EXPORT_CUSTOMER = "registrations.exportcustomer"
+    IMPORT_CUSTOMER = "registrations.importcustomer"
+
+
+class SupplierGroupPermissions:
+    """SupplierGroupPermissions"""
+    CREATE_SUPPLIER_GROUP = "registrations.create_suppliergroup"
+    EDIT_SUPPLIER_GROUP = "registrations.edit_suppliergroup"
+    VIEW_SUPPLIER_GROUP = "registrations.view_suppliergroup"
+    DISABLE_SUPPLIER_GROUP = "registrations.disable_suppliergroup"
+    DELETE_SUPPLIER_GROUP = "registrations.delete_suppliergroup"
+    EXPORT_SUPPLIER_GROUP = "registrations.exportsuppliergroup"
+    IMPORT_SUPPLIER_GROUP = "registrations.importsuppliergroup"
+
+
+class SupplierPermissions:
+    """SupplierPermissions"""
+    CREATE_SUPPLIER = "registrations.create_supplier"
+    EDIT_SUPPLIER = "registrations.edit_supplier"
+    VIEW_SUPPLIER = "registrations.view_supplier"
+    DISABLE_SUPPLIER = "registrations.disable_supplier"
+    DELETE_SUPPLIER = "registrations.delete_supplier"
+    EXPORT_SUPPLIER = "registrations.exportsupplier"
+    IMPORT_SUPPLIER = "registrations.importsupplier"

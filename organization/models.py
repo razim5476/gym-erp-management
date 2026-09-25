@@ -37,9 +37,9 @@ class CompanySettings(CustomModel):
         on_delete=models.PROTECT,
         related_name='company_settings_company'
     )
-    address = models.PositiveBigIntegerField()
+    address = models.ForeignKey('user.Address', on_delete=models.PROTECT, related_name='+')
     
-    financial_year = models.PositiveBigIntegerField()
+    financial_year = models.ForeignKey('core.FinancialYear', on_delete=models.PROTECT, related_name='+')
     logo = models.URLField(null=True, blank=True)
     language = models.CharField(max_length=256)
 
@@ -49,7 +49,7 @@ class CompanySettings(CustomModel):
     ]
     owner_type = models.CharField(max_length=50, choices=OWNER_STATUS, null=True, blank=True)
     gstin_number = models.CharField(max_length=15, null=True, blank=True)
-    currency = models.PositiveBigIntegerField()
+    currency = models.ForeignKey('core.Currency', on_delete=models.PROTECT, related_name='+')
 
     def __str__(self):
         return self.company.name
@@ -94,7 +94,7 @@ class BranchSettings(CustomModel):
         on_delete=models.PROTECT,
         related_name='branch_settings_company'
     )
-    address = models.PositiveBigIntegerField()
+    address = models.ForeignKey('user.Address', on_delete=models.PROTECT, related_name='+')
     
     is_unisex = models.BooleanField(default=True)
     GYM_TYPE_CHOICES = [
@@ -124,7 +124,7 @@ class BranchTrainers(CustomModel):
         on_delete=models.PROTECT,
         related_name='branch_trainers_branch'
     )
-    trainer = models.PositiveBigIntegerField()
+    trainer = models.ForeignKey('user.Trainer', on_delete=models.PROTECT, related_name='+')
 
 
     class Meta:
@@ -192,8 +192,8 @@ class Warehouse(CustomModel):
         on_delete=models.PROTECT,
         related_name='warehouse_branch'
     )
-    address = models.PositiveBigIntegerField()
-    account = models.PositiveBigIntegerField()
+    address = models.ForeignKey('user.Address', on_delete=models.PROTECT, related_name='+')
+    account = models.ForeignKey('accounts.Accounts', on_delete=models.PROTECT, related_name='+')
 
     description = CKEditor5Field('Description', config_name='extends')
 
